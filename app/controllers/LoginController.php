@@ -48,10 +48,13 @@ class LoginController
 
             if ($user && password_verify($password, $user['password'])) {
                 session_regenerate_id(true);
+                $_SESSION['user'] = $user;
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'];
                 $_SESSION['just_logged_in'] = true; //Welcome back appear isang beses lang pag log-in
                 $_SESSION['email'] = $user['email'];
+                
                 
 
             //Para sa remember me feature
@@ -65,9 +68,14 @@ class LoginController
                 setcookie('remember_token', $token, time() + (86400 * 30), "/", "", false, true);
 
             }
-            
+
+            if ($user['role'] === 'admin') {
+                header("Location: " . ROOT . "/admin");
+                exit;
+            } else if ($user['role'] === 'user') {
                 header("Location: " . ROOT . "/mainpage");
                 exit;
+            }
             } else {
                 $_SESSION['form_data']['error'] = 'Invalid username/email or password.';
             }

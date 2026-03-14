@@ -16,8 +16,17 @@ class Auth
 
     }
 
-    public static function user()
+
+    public static function isAdmin()
     {
-        return $_SESSION['user'] ?? null;
+        return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
+    }
+
+    public static function requireAdmin()
+    {
+        if (!self::isAdmin()) {
+            header("Location: " . ROOT . "/mainpage");
+            exit;
+        }
     }
 }
