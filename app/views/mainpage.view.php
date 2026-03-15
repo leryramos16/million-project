@@ -13,7 +13,8 @@
 <h1 class="board-title">Notice Board</h1>
 
 <div class="notice-board">
-
+    <div class="nail-bottom-left"></div>
+    <div class="nail-bottom-right"></div>
 <?php if(!empty($data['quests'])): ?>
 
 <?php foreach($data['quests'] as $quest): ?>
