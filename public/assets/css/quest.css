@@ -1,0 +1,75 @@
+body{
+font-family:'MedievalSharp', cursive;
+}
+
+/* Board title */
+.board-title{
+    text-align:center;
+    font-size:40px;
+    color:#f1e0b6;
+    margin-top:20px;
+}
+
+/* Quest board container */
+.quest-board{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+    padding:40px;
+}
+
+/* Paper design */
+.quest-paper{
+    background:#f3e3b5;
+    width:260px;
+    padding:20px;
+    border-radius:6px;
+
+    box-shadow:
+        0 6px 10px rgba(0,0,0,0.6),
+        inset 0 0 40px rgba(0,0,0,0.2);
+
+    transform: rotate(-1deg);
+
+    position:relative;
+}
+
+/* Random rotation for natural look */
+.quest-paper:nth-child(even){
+    transform: rotate(2deg);
+}
+
+.quest-paper:nth-child(3n){
+    transform: rotate(-3deg);
+}
+
+/* Torn paper edge illusion */
+.quest-paper::after{
+    content:"";
+    position:absolute;
+    top:-8px;
+    left:50%;
+    transform:translateX(-50%);
+    width:14px;
+    height:14px;
+    background:#444;
+    border-radius:50%;
+}
+
+/* Title */
+.quest-paper h3{
+    margin-top:0;
+    font-size:20px;
+    border-bottom:1px dashed #7b5a30;
+    padding-bottom:5px;
+}
+
+/* Logout button */
+.logout-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    color:#f1e0b6;
+    text-decoration:none;
+}

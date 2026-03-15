@@ -21,6 +21,14 @@ class MainPageController
             exit;
         }
 
-        $this->view('mainpage');
+        $questModel = $this->model('Quests');
+
+        $quests = $questModel->getAllQuests();
+
+        $data = [
+            'quests' => $quests
+        ];
+
+        $this->view('mainpage', $data);
     }
 }
