@@ -10,9 +10,9 @@
 <body>
     <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
 
-<h1 class="board-title">Available Quests</h1>
+<h1 class="board-title">Notice Board</h1>
 
-<div class="quest-board">
+<div class="notice-board">
 
 <?php if(!empty($data['quests'])): ?>
 
@@ -24,9 +24,9 @@
 
 <p><?= htmlspecialchars($quest['description']) ?></p>
 
-<p><strong>XP Reward:</strong> <?= $quest['xp_reward'] ?></p>
+<p><strong>XP:</strong> <?= $quest['xp_reward'] ?></p>
 
-<p><strong>Coins Reward:</strong> <?= $quest['coins_reward'] ?></p>
+<p><strong>Coins:</strong> <?= $quest['coins_reward'] ?></p>
 
 <p><strong>Type:</strong> <?= $quest['type'] ?></p>
 

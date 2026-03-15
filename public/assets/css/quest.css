@@ -1,13 +1,40 @@
 body{
-font-family:'MedievalSharp', cursive;
+    background:#1a120b;
+    font-family: Georgia, serif;
+}
+
+/* Board container */
+
+.notice-board{
+
+    max-width:1000px;
+    margin:40px auto;
+    padding:40px;
+
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+
+    /* wood texture */
+    background-image:url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+    background-color:#4a2f1b;
+
+    border:18px solid #2e1b0e;
+    border-radius:6px;
+
+    box-shadow:
+        inset 0 0 40px rgba(0,0,0,0.6),
+        0 10px 25px rgba(0,0,0,0.7);
 }
 
 /* Board title */
 .board-title{
     text-align:center;
-    font-size:40px;
-    color:#f1e0b6;
+    color:#f0d8a8;
+    font-size:42px;
     margin-top:20px;
+    text-shadow:2px 2px 5px black;
 }
 
 /* Quest board container */
@@ -21,18 +48,29 @@ font-family:'MedievalSharp', cursive;
 
 /* Paper design */
 .quest-paper{
-    background:#f3e3b5;
+    background:radial-gradient(circle at 30% 30%, rgba(0,0,0,0.08), transparent 40%),
+radial-gradient(circle at 80% 70%, rgba(0,0,0,0.08), transparent 40%),
+#f3e3b5;
     width:260px;
     padding:20px;
-    border-radius:6px;
+    overflow: visible;
+    position:relative;
 
     box-shadow:
-        0 6px 10px rgba(0,0,0,0.6),
-        inset 0 0 40px rgba(0,0,0,0.2);
+        0 8px 14px rgba(0,0,0,0.6),
+        inset 0 0 40px rgba(0,0,0,0.25);
 
-    transform: rotate(-1deg);
+    /* torn paper shape */
+    clip-path: polygon(
+        0% 5%, 3% 0%, 8% 3%, 15% 0%, 25% 3%, 35% 1%, 45% 4%, 55% 0%,
+        65% 3%, 75% 0%, 85% 3%, 92% 0%, 97% 4%, 100% 8%,
+        100% 95%, 97% 100%, 92% 97%, 85% 100%, 75% 96%, 65% 100%,
+        55% 96%, 45% 100%, 35% 97%, 25% 100%, 15% 97%, 8% 100%, 3% 97%, 0% 92%
+    );
 
-    position:relative;
+    transform:rotate(-1deg);
+
+    
 }
 
 /* Random rotation for natural look */
@@ -48,13 +86,32 @@ font-family:'MedievalSharp', cursive;
 .quest-paper::after{
     content:"";
     position:absolute;
-    top:-8px;
+
+    top:6px; /* move inside the paper */
     left:50%;
     transform:translateX(-50%);
-    width:14px;
-    height:14px;
-    background:#444;
+
+    width:16px;
+    height:16px;
+
+    background: radial-gradient(circle at 35% 35%, #ff8a8a 10%, #8b0000 70%);
+
     border-radius:50%;
+
+    box-shadow:
+    0 3px 4px rgba(0,0,0,0.6),
+    inset -2px -2px 4px rgba(0,0,0,0.4);
+
+    z-index:10;
+}
+    /*Burned edge shadow */
+    .quest-paper::before{
+        content:"";
+        position:absolute;
+        inset:0;
+        box-shadow: inset 0 0 25px rgba(0,0,0,0.35);
+        pointer-events:none;
+        z-index:1;
 }
 
 /* Title */
