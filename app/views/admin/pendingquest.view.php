@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Quest Requests</title>
+</head>
+<body>
+    <h1 class="board-title">Pending Quest Requests</h1>
+    <a href="<?= ROOT ?>/admin">Back</a>
+<div class="notice-board" style="max-width:800px; margin:50px auto; padding:30px;">
+    <?php if(!empty($data['quests'])): ?>
+        <?php foreach($data['quests'] as $quest): ?>
+            <div class="quest-paper" style="margin-bottom:20px; padding:20px;">
+                <h3><?= htmlspecialchars($quest['title']) ?></h3>
+                <!--<p><strong>Submitted by:</strong> <?= htmlspecialchars($quest['username']) ?></p> -->
+                <p><?= htmlspecialchars($quest['description']) ?></p>
+                <a href="<?= ROOT ?>/adminquests/edit/<?= $quest['id'] ?>" style="margin-right:10px;">Edit</a>
+                <a href="<?= ROOT ?>/adminquests/publish/<?= $quest['id'] ?>">Publish</a>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No pending quests.</p>
+    <?php endif; ?>
+</div>
+</body>
+</html>

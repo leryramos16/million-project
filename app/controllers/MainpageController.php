@@ -4,11 +4,6 @@ class MainPageController
 {
     use Controller;
 
-    public function __construct()
-    {
-        
-    }
-
     public function index()
     {
         Auth::requireLogin();

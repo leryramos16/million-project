@@ -1,5 +1,6 @@
 <a href="<?= ROOT ?>/logout">Logout</a>
 <h2>Create New Quest</h2>
+<a href="<?= ROOT ?>/admin/viewPendingRequests">Pending request</a>
 
 <?php 
 // Show general error

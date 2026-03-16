@@ -3,6 +3,7 @@
 class Quests
 {
     private $db;
+    protected $table = "quests";
 
     public function __construct()
     {
@@ -26,7 +27,16 @@ class Quests
 
         public function getAllQuests()
     {
-        $sql = "SELECT * FROM quests";
+        $sql = "SELECT * FROM quests WHERE status = 'approved'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // get quests for admin
+    public function getPendingRequests()
+    {
+        $sql = "SELECT * FROM quests WHERE status = 'pending'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
