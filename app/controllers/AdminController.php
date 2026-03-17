@@ -5,7 +5,11 @@ class AdminController {
 use Controller;
 
     public function index()
-    {
+    {   
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         Auth::requireLogin();
         Auth::requireAdmin();
         
@@ -43,6 +47,16 @@ use Controller;
             $data['quest'] = $questModel->findQuestById($id);
             $this->view('admin/editquest', $data);
         
+    }
+
+    public function publishQuest($id)
+    {
+        $questModel = new Quests();
+
+        $questModel->publishQuest($id);
+        $_SESSION['success'] = "Quest published successfully!";
+        header("Location: " . ROOT . "/admin/viewPendingRequests");
+
     }
     
 }

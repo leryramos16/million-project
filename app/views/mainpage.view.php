@@ -27,9 +27,7 @@
 
 <p><strong>XP:</strong> <?= $quest['xp_reward'] ?></p>
 
-<p><strong>Coins:</strong> <?= $quest['coins_reward'] ?></p>
-
-<p><strong>Type:</strong> <?= $quest['type'] ?></p>
+<p><strong>Reward coins:</strong> <?= $quest['coins_reward'] ?></p>
 
 </div>
 

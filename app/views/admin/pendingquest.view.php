@@ -6,6 +6,15 @@
     <title>Pending Quest Requests</title>
 </head>
 <body>
+    <?php if(isset($_SESSION['success'])): ?>
+
+        <p style="color:green;">
+            <?= $_SESSION['success']; ?>
+        </p>
+
+    <?php unset($_SESSION['success']); ?>
+
+    <?php endif; ?>
     <h1 class="board-title">Pending Quest Requests</h1>
     <a href="<?= ROOT ?>/admin">Back</a>
 <div class="notice-board" style="max-width:800px; margin:50px auto; padding:30px;">
@@ -16,7 +25,7 @@
                 <!--<p><strong>Submitted by:</strong> <?= htmlspecialchars($quest['username']) ?></p> -->
                 <p><?= htmlspecialchars($quest['description']) ?></p>
                 <a href="<?= ROOT ?>/admin/editQuest/<?= $quest['id'] ?>" style="margin-right:10px;">Edit</a>
-                <a href="<?= ROOT ?>/adminquests/publish/<?= $quest['id'] ?>">Publish</a>
+                <a href="<?= ROOT ?>/admin/publishQuest/<?= $quest['id'] ?>">Publish</a>
             </div>
         <?php endforeach; ?>
     <?php else: ?>

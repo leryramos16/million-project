@@ -71,5 +71,16 @@ class Quests
         'id' => $data['id']
     ]);
     }
+
+    public function publishQuest($id)
+    {
+        $sql = "UPDATE quests
+                SET status = 'approved'
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+                'id' => $id
+        ]);
+    }
 }
 
