@@ -15,7 +15,7 @@
                 <h3><?= htmlspecialchars($quest['title']) ?></h3>
                 <!--<p><strong>Submitted by:</strong> <?= htmlspecialchars($quest['username']) ?></p> -->
                 <p><?= htmlspecialchars($quest['description']) ?></p>
-                <a href="<?= ROOT ?>/adminquests/edit/<?= $quest['id'] ?>" style="margin-right:10px;">Edit</a>
+                <a href="<?= ROOT ?>/admin/editQuest/<?= $quest['id'] ?>" style="margin-right:10px;">Edit</a>
                 <a href="<?= ROOT ?>/adminquests/publish/<?= $quest['id'] ?>">Publish</a>
             </div>
         <?php endforeach; ?>

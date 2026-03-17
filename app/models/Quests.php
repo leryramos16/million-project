@@ -41,5 +41,35 @@ class Quests
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findQuestById($id)
+    {
+        $sql = "SELECT * FROM quests WHERE id = :id LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateQuest($data)
+    {
+        $sql = "UPDATE quests
+                SET title = :title,
+                    description = :description,
+                    xp_reward = :xp_reward,
+                    coins_reward = :coins_reward,
+                    type = :type
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+        'title' => $data['title'],
+        'description' => $data['description'],
+        'xp_reward' => $data['xp_reward'],
+        'coins_reward' => $data['coins_reward'],
+        'type' => $data['type'],
+        'id' => $data['id']
+    ]);
+    }
 }
 
