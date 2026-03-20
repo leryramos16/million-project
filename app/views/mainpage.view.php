@@ -9,7 +9,7 @@
 </head>
 <body>
     <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
-    <a class="add-btn" href="<?= ROOT ?>/addquest">Request to Admin</a>
+    <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
 <h1 class="board-title">Notice Board</h1>
 
 <div class="notice-board">

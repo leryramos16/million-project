@@ -19,7 +19,7 @@ use Controller;
     public function viewPendingRequests()
     {
         $questModel = new Quests;
-        $questModel->getPendingRequests();
+        //$questModel->getPendingRequests();
         $data['quests'] = $questModel->getPendingRequests();
 
         $this->view('admin/pendingquest', $data);

@@ -13,7 +13,7 @@
     <h1 class="board-title">Submit a Quest Request</h1>
 
     <div class="notice-board" style="max-width:600px; margin:50px auto; padding:30px;">
-        <form action="<?= ROOT ?>/addquest" method="POST">
+        <form action="<?= ROOT ?>/addquest" method="POST" enctype="multipart/form-data">
             <div style="margin-bottom:15px;">
                 <label for="title"><strong>Quest Title</strong></label><br>
                 <input type="text" name="title" id="title" required style="width:100%; padding:8px;">
@@ -23,6 +23,22 @@
                 <label for="description"><strong>Description</strong></label><br>
                 <textarea name="description" id="description" rows="6" required style="width:100%; padding:8px;"></textarea>
             </div>
+
+            <div style="margin-bottom:15px;">
+                    <strong>Payment Fee: ₱20</strong><br>
+                    Send payment to:
+
+                    <p>
+                    GCash: <b>09XXXXXXXXX</b><br>
+                    Maya: <b>09XXXXXXXXX</b>
+                    </p>
+                </div>
+
+                <div style="margin-bottom:15px;">
+                    <label><strong>Upload Payment Screenshot</strong></label><br>
+                    <input type="file" name="payment_proof" required>
+                </div>
+    
             <button type="submit" style="padding:10px 20px; background:#2e1b0e; color:#f1e0b6; font-weight:bold; border:none; border-radius:5px; cursor:pointer;">
                 Submit Quest
             </button>

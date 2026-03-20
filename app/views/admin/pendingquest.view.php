@@ -17,6 +17,7 @@
     <?php endif; ?>
     <h1 class="board-title">Pending Quest Requests</h1>
     <a href="<?= ROOT ?>/admin">Back</a>
+    
 <div class="notice-board" style="max-width:800px; margin:50px auto; padding:30px;">
     <?php if(!empty($data['quests'])): ?>
         <?php foreach($data['quests'] as $quest): ?>
@@ -24,6 +25,17 @@
                 <h3><?= htmlspecialchars($quest['title']) ?></h3>
                 <!--<p><strong>Submitted by:</strong> <?= htmlspecialchars($quest['username']) ?></p> -->
                 <p><?= htmlspecialchars($quest['description']) ?></p>
+
+                <?php if(!empty($quest['payment_proof'])): ?>
+                    <p><strong>Payment Proof:</strong></p>
+
+                        <a href="<?= ROOT ?>/public/uploads/payments/<?= $quest['payment_proof'] ?>" target="_blank">
+                            <img src="<?= ROOT ?>/public/uploads/payments/<?= $quest['payment_proof'] ?>" width="200">
+                        </a>
+                <?php else: ?>
+                    <p>No payment proof uploaded.</p>
+                <?php endif; ?>
+
                 <a href="<?= ROOT ?>/admin/editQuest/<?= $quest['id'] ?>" style="margin-right:10px;">Edit</a>
                 <a href="<?= ROOT ?>/admin/publishQuest/<?= $quest['id'] ?>">Publish</a>
             </div>

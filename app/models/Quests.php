@@ -12,12 +12,13 @@ class Quests
 
     public function create($data)
     {
-        $sql = "INSERT INTO quests (title, description, xp_reward, coins_reward, type)
-                VALUES (:title, :description, :xp, :coins, :type)";
+        $sql = "INSERT INTO quests (title, description, payment_proof, xp_reward, coins_reward, type)
+                VALUES (:title, :description, :payment_proof, :xp, :coins, :type)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
             'title' => $data['title'],
             'description' => $data['description'],
+            'payment_proof' => $data['payment_proof'],
             'xp' => $data['xp_reward'],
             'coins' => $data['coins_reward'],
             'type' => $data['type']
