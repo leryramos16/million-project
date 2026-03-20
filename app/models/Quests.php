@@ -12,18 +12,24 @@ class Quests
 
     public function create($data)
     {
-        $sql = "INSERT INTO quests (title, description, payment_proof, xp_reward, coins_reward, type)
-                VALUES (:title, :description, :payment_proof, :xp, :coins, :type)";
+        $sql = "INSERT INTO quests (title, description, payment_proof, xp_reward, coins_reward, type, status)
+                VALUES (:title, :description, :payment_proof, :xp, :coins, :type, :status)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([
+        $result = $stmt->execute([
             'title' => $data['title'],
             'description' => $data['description'],
-            'payment_proof' => $data['payment_proof'],
-            'xp' => $data['xp_reward'],
-            'coins' => $data['coins_reward'],
-            'type' => $data['type']
-            
+            'payment_proof' => $data['payment_proof'] ?? null,
+            'xp' => $data['xp_reward'] ?? 0,
+            'coins' => $data['coins_reward'] ?? 0,
+            'type' => $data['type'] ?? 'side_quests',
+            'status' => $data['status'] ?? 'pending'
         ]);
+
+        if ($result) {
+            return $this->db->lastInsertId();
+        }
+
+        return false;
     }
 
         public function getAllQuests()
