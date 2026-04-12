@@ -32,7 +32,7 @@ class Quests
         return false;
     }
 
-        public function getAllQuests()
+        public function findAll()
     {
         $sql = "SELECT * FROM quests WHERE status = 'approved'";
         $stmt = $this->db->prepare($sql);

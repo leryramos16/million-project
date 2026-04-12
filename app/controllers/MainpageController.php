@@ -18,7 +18,7 @@ class MainPageController
 
         $questModel = $this->model('Quests');
 
-        $quests = $questModel->getAllQuests();
+        $quests = $questModel->findAll();
 
         $data = [
             'quests' => $quests
