@@ -7,23 +7,17 @@ class MainPageController
     public function index()
     {
         Auth::requireLogin();
-        //check kung meron ng current session state/start pag wala pa
+
         if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+            session_start();
+        }
+
         if (!isset($_SESSION['user_id'])) {
             header("Location: " . ROOT . "/login");
             exit;
         }
 
-        $questModel = $this->model('Quests');
-
-        $quests = $questModel->findAll();
-
-        $data = [
-            'quests' => $quests
-        ];
-
-        $this->view('mainpage', $data);
+        // ONLY LOAD VIEW
+        $this->view('mainpage');
     }
 }
