@@ -89,5 +89,13 @@ class Quests
                 'id' => $id
         ]);
     }
+
+    public function acceptQuest($id)
+{
+    $query = "UPDATE quests SET status = 'accepted' WHERE id = :id";
+
+    $stmt = $this->db->prepare($query);
+    return $stmt->execute(['id' => $id]);
+}
 }
 

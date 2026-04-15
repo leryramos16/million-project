@@ -7,13 +7,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
     <link href="<?= ROOT ?>/assets/css/quest.css" rel="stylesheet">
-    
-    <script src="<?= ROOT ?>/assets/js/app.js"></script>
-    <script src="<?= ROOT ?>/assets/js/services/QuestService.js"></script>
-    <script src="<?= ROOT ?>/assets/js/controller/QuestController.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="<?= ROOT ?>/assets/js/app.js"></script>
+    <script src="<?= ROOT ?>/assets/js/services/Quest.js"></script>
+    <script src="<?= ROOT ?>/assets/js/controller/QuestController.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body ng-controller="QuestController">
+<body ng-controller="QuestController" ng-init="loadQuests()">
+    
     <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
     <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
 <h1 class="board-title">Notice Board</h1>
@@ -31,7 +34,7 @@
     <p><strong>XP:</strong> {{ quest.xp_reward }}</p>
 
     <p><strong>Reward coins:</strong> {{ quest.coins_reward }}</p>
-
+    <button ng-click="do_accept_quest(quest.id)">Accept Quest</button>
 </div>
 
 <p ng-if="quests.length === 0">No quests available.</p>
