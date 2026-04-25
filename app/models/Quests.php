@@ -12,9 +12,13 @@ class Quests
 
     public function create($data)
     {
-        $sql = "INSERT INTO quests (title, description, payment_proof, xp_reward, coins_reward, type, status)
-                VALUES (:title, :description, :payment_proof, :xp, :coins, :type, :status)";
+        $sql = "INSERT INTO quests 
+                (title, description, payment_proof, xp_reward, coins_reward, type, status)
+                VALUES 
+                (:title, :description, :payment_proof, :xp, :coins, :type, :status)";
+
         $stmt = $this->db->prepare($sql);
+
         $result = $stmt->execute([
             'title' => $data['title'],
             'description' => $data['description'],
@@ -25,27 +29,24 @@ class Quests
             'status' => $data['status'] ?? 'pending'
         ]);
 
-        if ($result) {
-            return $this->db->lastInsertId();
-        }
-
-        return false;
+        return $result ? $this->db->lastInsertId() : false;
     }
 
-        public function findAll()
+    public function findAll()
     {
         $sql = "SELECT * FROM quests WHERE status = 'approved'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // get quests for admin
     public function getPendingRequests()
     {
         $sql = "SELECT * FROM quests WHERE status = 'pending'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -56,6 +57,7 @@ class Quests
         $stmt->execute([
             'id' => $id
         ]);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -68,15 +70,17 @@ class Quests
                     coins_reward = :coins_reward,
                     type = :type
                 WHERE id = :id";
+
         $stmt = $this->db->prepare($sql);
+
         return $stmt->execute([
-        'title' => $data['title'],
-        'description' => $data['description'],
-        'xp_reward' => $data['xp_reward'],
-        'coins_reward' => $data['coins_reward'],
-        'type' => $data['type'],
-        'id' => $data['id']
-    ]);
+            'title' => $data['title'],
+            'description' => $data['description'],
+            'xp_reward' => $data['xp_reward'],
+            'coins_reward' => $data['coins_reward'],
+            'type' => $data['type'],
+            'id' => $data['id']
+        ]);
     }
 
     public function publishQuest($id)
@@ -84,18 +88,26 @@ class Quests
         $sql = "UPDATE quests
                 SET status = 'approved'
                 WHERE id = :id";
+
         $stmt = $this->db->prepare($sql);
+
         return $stmt->execute([
-                'id' => $id
+            'id' => $id
         ]);
     }
 
     public function acceptQuest($id)
-{
-    $query = "UPDATE quests SET status = 'accepted' WHERE id = :id";
+    {
+        $sql = "UPDATE quests
+                SET status = 'accepted'
+                WHERE id = :id
+                AND status = 'approved'";
 
-    $stmt = $this->db->prepare($query);
-    return $stmt->execute(['id' => $id]);
-}
-}
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'id' => $id
+        ]);
 
+        return $stmt->rowCount() > 0;
+    }
+}

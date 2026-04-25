@@ -13,9 +13,8 @@
     <script src="<?= ROOT ?>/assets/js/app.js"></script>
     <script src="<?= ROOT ?>/assets/js/services/Quest.js"></script>
     <script src="<?= ROOT ?>/assets/js/controller/QuestController.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body ng-controller="QuestController" ng-init="loadQuests()">
+<body ng-controller="QuestController">
     
     <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
     <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>

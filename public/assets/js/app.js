@@ -1,1 +1,1 @@
-var app = angular.module('questApp', ['oitozero.ngSweetAlert']);
+var app = angular.module('questApp', []);
