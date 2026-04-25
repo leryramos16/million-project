@@ -46,6 +46,7 @@ class QuestApiController {
     public function acceptQuest()
     {
         $quest_id = $_POST['quest_id'] ?? null;
+        $user_id = $_SESSION['user_id'] ?? null;
 
         if (!$quest_id) {
             echo json_encode([
@@ -55,8 +56,16 @@ class QuestApiController {
             return;
         }
 
+        if (!$user_id) {
+            echo json_encode([
+                "status" => false,
+                "message" => "User not logged in"
+            ]);
+            return;
+        }
+
         $questModel = $this->model('Quests');
-        $result = $questModel->acceptQuest($quest_id);
+        $result = $questModel->acceptQuest($quest_id, $user_id);
 
         echo json_encode([
             "status" => $result ? true : false,
