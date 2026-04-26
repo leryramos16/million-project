@@ -13,11 +13,32 @@
     <script src="<?= ROOT ?>/assets/js/app.js"></script>
     <script src="<?= ROOT ?>/assets/js/services/Quest.js"></script>
     <script src="<?= ROOT ?>/assets/js/controller/QuestController.js"></script>
+    <script src="<?= ROOT ?>/assets/js/controller/MyRequestController.js"></script>
 </head>
 <body ng-controller="QuestController">
+
+    <div class="player-card">
+    <div class="player-name"><?= $_SESSION['username'] ?? 'Adventurer' ?></div>
+
+    <div class="player-level">
+        Level <?= $_SESSION['user']['level'] ?? 1 ?>
+    </div>
+
+    <div class="xp-bar">
+        <div 
+            class="xp-fill" 
+            style="width: <?= min(100, (($_SESSION['user']['xp'] ?? 0) / 100) * 100) ?>%;">
+        </div>
+    </div>
+
+    <div class="xp-text">
+        XP: <?= $_SESSION['user']['xp'] ?? 0 ?> / 100
+    </div>
+</div>
     
     <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
     <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
+    <a class="my-request-btn" href="<?= ROOT ?>/myrequest">My Request</a>
 <h1 class="board-title">Notice Board</h1>
 
 <div class="notice-board">

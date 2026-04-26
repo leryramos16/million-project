@@ -69,4 +69,6 @@ app.controller('QuestController', function($scope, Quest) {
     };
 
 
+ 
+
 })

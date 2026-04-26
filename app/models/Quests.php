@@ -13,9 +13,9 @@ class Quests
     public function create($data)
     {
         $sql = "INSERT INTO quests 
-                (title, description, payment_proof, xp_reward, coins_reward, type, status)
+                (title, description, payment_proof, xp_reward, coins_reward, type, status, created_by)
                 VALUES 
-                (:title, :description, :payment_proof, :xp, :coins, :type, :status)";
+                (:title, :description, :payment_proof, :xp, :coins, :type, :status, :created_by)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -26,7 +26,8 @@ class Quests
             'xp' => $data['xp_reward'] ?? 0,
             'coins' => $data['coins_reward'] ?? 0,
             'type' => $data['type'] ?? 'side_quests',
-            'status' => $data['status'] ?? 'pending'
+            'status' => $data['status'] ?? 'pending',
+            'created_by' =>$_SESSION['user_id'] ?? null
         ]);
 
         return $result ? $this->db->lastInsertId() : false;
@@ -113,6 +114,19 @@ class Quests
         return $stmt->rowCount() > 0;
     }
 
+    public function getAcceptedQuestsByUser($user_id)
+{
+    $sql = "SELECT * FROM quests
+            WHERE accepted_by = :user_id
+            AND status = 'accepted'
+            ORDER BY created_at DESC";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
     public function completeQuest($quest_id, $user_id)
 {
     $this->db->beginTransaction();
@@ -198,4 +212,22 @@ class Quests
         return false;
     }
 }
+
+    public function getMyRequests($user_id)
+    {
+        $sql = "SELECT 
+                    q.*,
+                    u.username AS accepted_by_name
+                FROM quests q
+                LEFT JOIN users u
+                    ON q.accepted_by = u.id
+                WHERE q.created_by = :user_id
+                ORDER BY q.created_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'user_id' => $user_id
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

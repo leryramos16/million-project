@@ -222,9 +222,10 @@ bottom:10px;
 
 /* Logout button */
 .logout-btn{
-    position:absolute;
-    top:20px;
-    right:20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
     color:#f1e0b6;
     text-decoration:none;
 }
@@ -245,6 +246,187 @@ bottom:10px;
     display: inline-block;
 }
 
+.my-request-btn {
+    position: absolute;
+    top: 20px;
+    right: 220px;
+
+    color: #f1e0b6;
+    text-decoration: none;
+}
 
 
+.player-card {
+    position: absolute;
+    top: 20px;
+    left: 20px;
 
+    width: 250px;
+    padding: 15px;
+
+    background: linear-gradient(135deg, #3a2414, #6b4423);
+    border: 3px solid #c49a5a;
+    border-radius: 10px;
+
+    color: #f7e7b8;
+    box-shadow:
+        0 8px 15px rgba(0,0,0,0.7),
+        inset 0 0 20px rgba(0,0,0,0.5);
+
+    z-index: 20;
+}
+
+.player-name {
+    font-family: "MedievalSharp", Georgia, serif;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.player-level {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #ffd27d;
+}
+
+.xp-bar {
+    width: 100%;
+    height: 16px;
+
+    background: #1f1208;
+    border: 2px solid #8b5a2b;
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3ea6ff, #7bdcff);
+    border-radius: 10px;
+}
+
+.xp-text {
+    margin-top: 5px;
+    font-size: 13px;
+    text-align: right;
+}
+
+/* Background (dark Witcher feel) */
+.journal-body {
+    background: radial-gradient(circle at center, #1a120b, #0f0a06);
+    min-height: 100vh;
+    padding: 30px;
+}
+
+/* Title */
+.journal-title {
+    text-align: center;
+    font-family: "MedievalSharp", Georgia, serif;
+    color: #f0d8a8;
+    font-size: 42px;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 6px black;
+}
+
+/* Container */
+.journal-container {
+    max-width: 700px;
+    margin: auto;
+}
+
+/* Single paper style */
+.journal-entry {
+    background: linear-gradient(135deg, #f7e7b8, #d8b978 60%, #b98b4c);
+    color: #2d1608;
+
+    padding: 25px;
+    margin-bottom: 20px;
+
+    border: 2px solid #8a5a2b;
+    border-radius: 8px;
+
+    box-shadow:
+        0 10px 20px rgba(0,0,0,0.7),
+        inset 0 0 25px rgba(60,30,10,0.5);
+
+    position: relative;
+}
+
+/* Burned effect */
+.journal-entry::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
+    pointer-events: none;
+}
+
+/* Title */
+.journal-entry h3 {
+    font-family: "MedievalSharp", Georgia, serif;
+    margin-top: 0;
+    border-bottom: 1px dashed #6f431e;
+}
+
+/* Description */
+.journal-desc {
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+/* Meta */
+.journal-meta {
+    font-size: 14px;
+}
+
+/* Status colors */
+.status {
+    padding: 3px 8px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #d8b978;
+}
+
+.status.approved {
+    background: #9fd18b;
+}
+
+.status.accepted {
+    background: #7bdcff;
+}
+
+.status.completed {
+    background: #c49a5a;
+}
+
+/* Back button */
+.back-btn {
+    display: inline-block;
+    margin-bottom: 20px;
+
+    color: #f1e0b6;
+    text-decoration: none;
+
+    background: #3a2414;
+    border: 2px solid #c49a5a;
+
+    padding: 10px 15px;
+    border-radius: 6px;
+
+    box-shadow: 0 5px 12px rgba(0,0,0,0.6);
+}
+
+.back-btn:hover {
+    background: #6b4423;
+}
+
+/* Empty text */
+.empty-request {
+    text-align: center;
+    color: #f1e0b6;
+    font-size: 20px;
+}

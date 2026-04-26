@@ -25,6 +25,10 @@ class QuestApiController {
                 $this->acceptQuest();
                 break;
 
+            case 'getMyRequests':
+                $this->getMyRequests();
+                break;
+
             default:
                 echo json_encode([
                     "status" => false,
@@ -70,6 +74,27 @@ class QuestApiController {
         echo json_encode([
             "status" => $result ? true : false,
             "message" => $result ? "Quest accepted" : "Failed to accept quest"
+        ]);
+    }
+
+    public function getMyRequests()
+    {
+        $user_id = $_SESSION['user_id'] ?? null;
+        
+        if (!$user_id) {
+            echo json_encode([
+                "status" => false,
+                "message" => "User not logged in"
+            ]);
+            return;
+        }
+
+        $questModel = $this->model('Quests');
+        $requests = $questModel->getMyRequests($user_id);
+        
+        echo json_encode([
+            "status" => true,
+            "data" => $requests
         ]);
     }
 
