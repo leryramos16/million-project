@@ -54,10 +54,10 @@
     <p><strong>XP:</strong> {{ quest.xp_reward }}</p>
 
     <p><strong>Reward coins:</strong> {{ quest.coins_reward }}</p>
-    <button ng-click="do_accept_quest(quest.id)">Accept Quest</button>
+    <button class="accept-btn" ng-click="do_accept_quest(quest.id)">Accept Quest</button>
 </div>
 
-<p ng-if="quests.length === 0">No quests available.</p>
+<p ng-if="quests.length === 0" class="no-quest-text">No quests available.</p>
 
 </div>
 

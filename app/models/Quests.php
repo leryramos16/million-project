@@ -103,7 +103,8 @@ class Quests
                 SET status = 'accepted',
                     accepted_by = :user_id
                 WHERE id = :quest_id
-                AND status = 'approved'";
+                AND status = 'approved'
+                AND created_by != :user_id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([

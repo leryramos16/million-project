@@ -73,7 +73,7 @@ class QuestApiController {
 
         echo json_encode([
             "status" => $result ? true : false,
-            "message" => $result ? "Quest accepted" : "Failed to accept quest"
+            "message" => $result ? "Quest accepted" : "Failed to accept quest/ own quest"
         ]);
     }
 

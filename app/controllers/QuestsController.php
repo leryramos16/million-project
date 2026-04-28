@@ -36,6 +36,7 @@ class QuestsController
             $xp = (int) $_POST['xp_reward'];
             $coins = (int) $_POST['coins_reward'];
             $type = $_POST['type'];
+            $user_id = $_SESSION['user_id'] ?? null;
             
 
             // Save submitted data in session in case of errors
@@ -62,6 +63,7 @@ class QuestsController
                     'xp_reward' => $xp,
                     'coins_reward' => $coins,
                     'type' => $type,
+                    'created_by' => $user_id,
                     
                 ]);
 
