@@ -28,6 +28,15 @@ class QuestApiController {
             case 'getMyRequests':
                 $this->getMyRequests();
                 break;
+            
+            case 'markQuestDone':
+                $this->markQuestDone();
+                break;
+
+            case 'getUserStats':
+                $this->getUserStats();
+                break;
+
 
             default:
                 echo json_encode([
@@ -97,5 +106,58 @@ class QuestApiController {
             "data" => $requests
         ]);
     }
+
+    public function markQuestDone()
+    {
+        $quest_id = $_POST['quest_id'] ?? null;
+        $user_id = $_SESSION['user_id'] ?? null;
+
+        if (!$quest_id) {
+            echo json_encode([
+                "status" => false,
+                "message" => "No quest ID"
+            ]);
+            return;
+        }
+
+        if (!$user_id) {
+            echo json_encode([
+                "status" => false,
+                "message" => "User not logged in"
+            ]);
+            return;
+        }
+
+        $questModel = $this->model('Quests');
+        $result = $questModel->markQuestDone($quest_id, $user_id);
+
+        echo json_encode([
+            "status" => $result,
+            "message" => $result 
+                ? "Quest completed. XP and coins rewarded!" 
+                : "Failed. Quest may not belong to you, not accepted yet, or already completed."
+        ]);
+    }
+
+    public function getUserStats()
+{
+    $user_id = $_SESSION['user_id'] ?? null;
+
+    if (!$user_id) {
+        echo json_encode([
+            "status" => false,
+            "message" => "User not logged in"
+        ]);
+        return;
+    }
+
+    $questModel = $this->model('Quests');
+    $user = $questModel->getUserStats($user_id);
+
+    echo json_encode([
+        "status" => $user ? true : false,
+        "data" => $user
+    ]);
+}
 
 }

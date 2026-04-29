@@ -18,21 +18,27 @@
 <body ng-controller="QuestController">
 
     <div class="player-card">
-    <div class="player-name"><?= $_SESSION['username'] ?? 'Adventurer' ?></div>
+    <div class="player-name">
+        {{ player.username || 'Adventurer' }}
+    </div>
 
     <div class="player-level">
-        Level <?= $_SESSION['user']['level'] ?? 1 ?>
+        Level {{ player.level || 1 }}
     </div>
 
     <div class="xp-bar">
         <div 
             class="xp-fill" 
-            style="width: <?= min(100, (($_SESSION['user']['xp'] ?? 0) / 100) * 100) ?>%;">
+            ng-style="{ width: getXpPercent() + '%' }">
         </div>
     </div>
 
     <div class="xp-text">
-        XP: <?= $_SESSION['user']['xp'] ?? 0 ?> / 100
+        XP: {{ player.xp || 0 }} / {{ getRequiredXp() }}
+    </div>
+
+    <div class="xp-text">
+        Coins: {{ player.coins || 0 }}
     </div>
 </div>
     

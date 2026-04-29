@@ -12,6 +12,7 @@
 
     <script src="<?= ROOT ?>/assets/js/app.js"></script>
     <script src="<?= ROOT ?>/assets/js/services/Quest.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= ROOT ?>/assets/js/controller/MyRequestController.js"></script>
 </head>
 
@@ -31,6 +32,8 @@
             {{ request.description }}
         </p>
 
+        
+
         <div class="journal-meta">
             <p>
                 <strong>Status:</strong>
@@ -46,7 +49,13 @@
             <p ng-if="!request.accepted_by">
                 <strong>Accepted by:</strong> No one yet
             </p>
+            <button class="done-btn" ng-if="request.accepted_by && request.status ==='accepted'" ng-click="markQuestDone(request.id)">
+                Mark as Done
+            </button>
+            
         </div>
+
+        
 
     </div>
 

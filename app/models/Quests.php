@@ -231,4 +231,112 @@ class Quests
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    public function markQuestDone($quest_id, $owner_id)
+{
+    $this->db->beginTransaction();
+
+    try {
+        $sql = "SELECT *
+                FROM quests
+                WHERE id = :quest_id
+                AND created_by = :owner_id
+                AND status = 'accepted'
+                AND accepted_by IS NOT NULL
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'quest_id' => $quest_id,
+            'owner_id' => $owner_id
+        ]);
+
+        $quest = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$quest) {
+            $this->db->rollBack();
+            return false;
+        }
+
+        $acceptedUserId = $quest['accepted_by'];
+        $xpReward = (int) $quest['xp_reward'];
+        $coinsReward = (int) $quest['coins_reward'];
+
+        // Get accepted user's current stats
+        $sql = "SELECT id, level, xp, coins
+                FROM users
+                WHERE id = :user_id
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'user_id' => $acceptedUserId
+        ]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            $this->db->rollBack();
+            return false;
+        }
+
+        $newXp = (int)$user['xp'] + $xpReward;
+        $newCoins = (int)$user['coins'] + $coinsReward;
+        $newLevel = (int)$user['level'];
+
+        // Level up logic: Level 1 needs 100 XP, Level 2 needs 200 XP, etc.
+        while ($newXp >= ($newLevel * 100)) {
+            $newXp -= ($newLevel * 100);
+            $newLevel++;
+        }
+
+        // Update accepted user's rewards
+        $sql = "UPDATE users
+                SET xp = :xp,
+                    coins = :coins,
+                    level = :level
+                WHERE id = :user_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'xp' => $newXp,
+            'coins' => $newCoins,
+            'level' => $newLevel,
+            'user_id' => $acceptedUserId
+        ]);
+
+        // Mark quest as completed
+        $sql = "UPDATE quests
+                SET status = 'completed'
+                WHERE id = :quest_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'quest_id' => $quest_id
+        ]);
+
+        $this->db->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        return false;
+    }
+}
+
+    public function getUserStats($user_id)
+    {
+        $sql = "SELECT id, username, level, xp, coins
+                FROM users
+                WHERE id = :user_id
+                LIMIT 1";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'user_id' => $user_id
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 }
