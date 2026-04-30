@@ -19,6 +19,21 @@ app.factory('Quest', function($http, $httpParamSerializerJQLike) {
                 },
                 data: $httpParamSerializerJQLike(data)
             });
+        },
+        // for uploading files/images
+        postFormData: function(file, formData) {
+            var x = Math.random().toString(36).substring(2, 15);
+
+            return $http({
+                method: 'POST',
+                url: file,
+                headers: {
+                    'Content-Type':undefined,
+                    'X': x
+                },
+                transformRequest: angular.identity,
+                data: formData
+            });
         }
-    }
+    };
 });
