@@ -35,7 +35,9 @@ class Quests
 
     public function findAll()
     {
-        $sql = "SELECT * FROM quests WHERE status = 'approved'";
+        $sql = "SELECT q.*, u.username FROM quests q
+                LEFT JOIN users u ON u.id = q.created_by
+                WHERE q.status = 'approved'";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 

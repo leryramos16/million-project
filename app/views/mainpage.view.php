@@ -17,34 +17,34 @@
 </head>
 <body ng-controller="QuestController">
 
+<div class="top-bar">
+     <div class="top-actions">
+        <a class="my-request-btn" href="<?= ROOT ?>/myrequest">My Request</a>
+        <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
+        <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
+    </div>
     <div class="player-card">
-    <div class="player-name">
-        {{ player.username || 'Adventurer' }}
-    </div>
+        <div class="player-name">
+            {{ player.username || 'Adventurer' }}
+        </div>
 
-    <div class="player-level">
-        Level {{ player.level || 1 }}
-    </div>
+        <div class="player-level">
+            Level {{ player.level || 1 }}
+        </div>
 
-    <div class="xp-bar">
-        <div 
-            class="xp-fill" 
-            ng-style="{ width: getXpPercent() + '%' }">
+        <div class="xp-bar">
+            <div class="xp-fill" ng-style="{ width: getXpPercent() + '%' }"></div>
+        </div>
+
+        <div class="xp-text">
+            XP: {{ player.xp || 0 }} / {{ getRequiredXp() }}
+        </div>
+
+        <div class="xp-text">
+            Coins: {{ player.coins || 0 }}
         </div>
     </div>
-
-    <div class="xp-text">
-        XP: {{ player.xp || 0 }} / {{ getRequiredXp() }}
-    </div>
-
-    <div class="xp-text">
-        Coins: {{ player.coins || 0 }}
-    </div>
 </div>
-    
-    <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
-    <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
-    <a class="my-request-btn" href="<?= ROOT ?>/myrequest">My Request</a>
 <h1 class="board-title">Notice Board</h1>
 
 <div class="notice-board">
@@ -60,6 +60,7 @@
     <p><strong>XP:</strong> {{ quest.xp_reward }}</p>
 
     <p><strong>Reward coins:</strong> {{ quest.coins_reward }}</p>
+    <h6>By: {{ quest.username || 'Unknown Adventurer' }}</h6>
     <button class="accept-btn" ng-click="do_accept_quest(quest.id)">Accept Quest</button>
 </div>
 

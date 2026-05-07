@@ -36,7 +36,7 @@
 
         <div class="journal-meta">
             <p>
-                <strong>Status:</strong>
+                
                 <span class="status {{ request.status }}">
                     {{ request.status }}
                 </span>
@@ -50,7 +50,7 @@
                 <strong>Accepted by:</strong> No one yet
             </p>
             <button class="done-btn" ng-if="request.accepted_by && request.status ==='accepted'" ng-click="markQuestDone(request.id)">
-                Mark as Done
+                <span class="icon">⚔</span><span class="text">Complete Quest</span>
             </button>
             
         </div>

@@ -1,7 +1,31 @@
 app.controller('QuestController', function($scope, Quest) {
 
+
+    // custom modal
+    $scope.customModal = function(options) {
+    return Swal.fire({
+        title: options.title || '',
+        text: options.text || '',
+        icon: options.icon || 'info',
+        showCancelButton: options.showCancelButton || false,
+        confirmButtonText: options.confirmButtonText || 'OK',
+        cancelButtonText: options.cancelButtonText || 'Cancel',
+
+        customClass: {
+            popup: 'medieval-popup',
+            title: 'medieval-title',
+            htmlContainer: 'medieval-text',
+            confirmButton: 'medieval-confirm',
+            cancelButton: 'medieval-cancel'
+        },
+        buttonsStyling: false
+    });
+};
     $scope.quests = [];
     $scope.player = {};
+
+
+    
 
     $scope.getRequiredXp = function() {
         var level = parseInt($scope.player.level || 1);
@@ -98,12 +122,20 @@ app.controller('QuestController', function($scope, Quest) {
                         $scope.loadQuests();
                         $scope.loadUserStats();
                     } else {
-                        Swal.fire("Failed", res.data.message, "error");
+                        $scope.customModal({
+                            title: "Failed",
+                            text: res.data.message,
+                            icon: "error"
+                        });
                     }
                 })
                 .catch(function(err) {
                     console.error(err);
-                    Swal.fire("Error", "Something went wrong", "error");
+                    $scope.customModal({
+                        title: "Error",
+                        text: "Something went wrong",
+                        icon: "error"
+                    });
                 });
         });
     };
