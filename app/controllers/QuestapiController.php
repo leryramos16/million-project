@@ -173,26 +173,52 @@ class QuestApiController {
     }
 
     public function getMyRequests()
-    {
-        $user_id = $_SESSION['user_id'] ?? null;
-        
-        if (!$user_id) {
-            echo json_encode([
-                "status" => false,
-                "message" => "User not logged in"
-            ]);
-            return;
-        }
+{
+    $status = $_POST['status'] ?? 'pending';
+    $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
+    $limit = isset($_POST['limit']) ? (int)$_POST['limit'] : 10;
 
-        $questModel = $this->model('Quests');
-        $requests = $questModel->getMyRequests($user_id);
-        
-        echo json_encode([
-            "status" => true,
-            "data" => $requests
-        ]);
+    if ($page < 1) {
+        $page = 1;
     }
 
+    if ($limit < 1) {
+        $limit = 10;
+    }
+
+    $offset = ($page - 1) * $limit;
+
+    $user_id = $_SESSION['user_id'] ?? null;
+
+    if (!$user_id) {
+        echo json_encode([
+            "status" => false,
+            "message" => "User not logged in"
+        ]);
+        return;
+    }
+
+    $questModel = $this->model('Quests');
+
+    $totalRows = $questModel->countMyRequests($user_id, $status);
+    $totalPages = ceil($totalRows / $limit);
+
+    $requests = $questModel->getMyRequests(
+        $user_id,
+        $status,
+        $limit,
+        $offset
+    );
+
+    echo json_encode([
+        "status" => true,
+        "data" => $requests,
+        "totalRows" => $totalRows,
+        "totalPages" => $totalPages,
+        "page" => $page,
+        "limit" => $limit
+    ]);
+}
     public function markQuestDone()
     {
         $quest_id = $_POST['quest_id'] ?? null;
@@ -217,12 +243,19 @@ class QuestApiController {
         $questModel = $this->model('Quests');
         $result = $questModel->markQuestDone($quest_id, $user_id);
 
+        if ($result && isset($result['success']) && $result['success'] === true) {
         echo json_encode([
-            "status" => $result,
-            "message" => $result 
-                ? "Quest completed. XP and coins rewarded!" 
-                : "Failed. Quest may not belong to you, not accepted yet, or already completed."
+            "status" => true,
+            "message" => "Quest completed. XP and coins rewarded!",
+            "new_achievements" => $result['new_achievements'] ?? []
         ]);
+        return;
+    }
+
+    echo json_encode([
+        "status" => false,
+        "message" => "Failed. Quest may not belong to you, not accepted yet, or already completed."
+    ]);
     }
 
     public function getUserStats()

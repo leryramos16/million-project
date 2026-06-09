@@ -5,9 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Quests</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+
     <link href="<?= ROOT ?>/assets/css/quest.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+<!--LEAFLET -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="<?= ROOT ?>/assets/js/app.js"></script>
@@ -21,7 +29,8 @@
      <div class="top-actions">
         <a class="my-request-btn" href="<?= ROOT ?>/myrequest">My Request</a>
         <a class="add-btn" href="<?= ROOT ?>/addquest">Ask for Help</a>
-        <a class="logout-btn" href="<?= ROOT ?>/logout">Logout</a>
+        <a class="achievement-btn" href="<?= ROOT ?>/achievements">Achievements</a>
+        <a class="logout-btn" ng-click="confirmLogout($event, '<?= ROOT ?>/logout')">Logout</a>
     </div>
     <div class="player-card">
         <div class="player-name">
@@ -45,24 +54,32 @@
         </div>
     </div>
 </div>
-<h1 class="board-title">Notice Board</h1>
-
+    <div class="board-logo-container">
+    <img 
+        src="<?= ROOT ?>/assets/images/noticeboard.png"
+        alt="Real Life Quest"
+        class="board-logo"
+    >
+</div>
+    
 <div class="notice-board">
     <div class="nail-bottom-left"></div>
     <div class="nail-bottom-right"></div>
 
-    <div class="quest-paper" ng-repeat="quest in quests">
+    <div class="quest-paper" ng-repeat="quest in quests" ng-click="trackQuest(quest)">
+        
+        <h3>{{ quest.title }}</h3>
 
-    <h3>{{ quest.title }}</h3>
+        <p>{{ quest.description }}</p>
 
-    <p>{{ quest.description }}</p>
+        <p><strong>XP:</strong> {{ quest.xp_reward }}</p>
 
-    <p><strong>XP:</strong> {{ quest.xp_reward }}</p>
+        <p><strong>Reward coins:</strong> {{ quest.coins_reward }}</p>
+        <h6 class="handwritten">~ {{ quest.username || 'Unknown Adventurer' }}</h6>
+        <button class="accept-btn" ng-click="do_accept_quest(quest.id)">Accept Quest</button>
+    </div>
 
-    <p><strong>Reward coins:</strong> {{ quest.coins_reward }}</p>
-    <h6>By: {{ quest.username || 'Unknown Adventurer' }}</h6>
-    <button class="accept-btn" ng-click="do_accept_quest(quest.id)">Accept Quest</button>
-</div>
+
 
 <p ng-if="quests.length === 0" class="no-quest-text">No quests available.</p>
 

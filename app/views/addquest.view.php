@@ -23,12 +23,12 @@
 
             <div class="form-group">
                 <label for="title">Quest Title</label>
-                <input type="text" ng-model="quest.title" required placeholder="Enter quest title...">
+                <input type="text" ng-model="quest.title" placeholder="Enter quest title...">
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea ng-model="quest.description" rows="6" required placeholder="Describe your request..."></textarea>
+                <textarea ng-model="quest.description" rows="6" placeholder="Describe your request..."></textarea>
             </div>
 
             <div class="payment-box">
@@ -42,7 +42,7 @@
 
             <div class="form-group">
                 <label for="payment_proof">Upload Payment Screenshot</label>
-                <input type="file" file-model="quest.paymentProof" required>
+                <input type="file" file-model="quest.paymentProof">
             </div>
 
             <button class="submit-quest-btn" type="submit">

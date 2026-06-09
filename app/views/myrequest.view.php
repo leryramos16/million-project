@@ -17,13 +17,39 @@
 </head>
 
 <body ng-controller="MyRequestController" class="journal-body">
+    
+    <div>
+        <a class="back-btn" href="<?= ROOT ?>/mainpage">← Back</a>
+    </div>
 
-<a class="back-btn" href="<?= ROOT ?>/mainpage">← Back</a>
+    <div>
+        <h1 class="journal-title">My Requests</h1>
+    </div>
 
-<h1 class="journal-title">My Requests</h1>
+    <div class="quest-nav">
+         <button ng-click="do_filter('pending')"
+            ng-class="{active : currentFilter == 'pending'}">
+            Pending
+        </button>
+
+        <button ng-click="do_filter('approved')"
+                ng-class="{active : currentFilter == 'approved'}">
+            Approved
+        </button>
+
+        <button ng-click="do_filter('accepted')"
+                ng-class="{active : currentFilter == 'accepted'}">
+            Need Completion
+        </button>
+
+        <button ng-click="do_filter('completed')"
+                ng-class="{active : currentFilter == 'completed'}">
+            Completed
+        </button>
+    </div>
 
 <div class="journal-container">
-
+    <div class="journal-pages" ng-class="flipClass"> 
     <div class="journal-entry" ng-repeat="request in myRequests">
 
         <h3>{{ request.title }}</h3>
@@ -62,6 +88,19 @@
     <p class="empty-request" ng-if="myRequests.length === 0">
         No requests yet.
     </p>
+    </div>
+
+    <div class="quest-pagination">
+        <button ng-click="prevPage()" ng-disabled="page <= 1">
+            <span class="icon">❮</span> Turn Back
+        </button>
+
+        <span>Chapter {{ page }} of {{ totalPages }}</span>
+
+        <button ng-click="nextPage()" ng-disabled="page >= totalPages">
+            Turn Page <span class="icon">❯</span>
+        </button>
+    </div>
 
 </div>
 

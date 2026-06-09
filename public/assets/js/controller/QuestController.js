@@ -1,6 +1,75 @@
 app.controller('QuestController', function($scope, Quest) {
 
 
+
+
+    
+    $scope.confirmLogout = function(event, logoutUrl) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'See you again mate?',
+        text: 'Are you sure you want to logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, logout',
+        cancelButtonText: 'Stay here',
+        reverseButtons: true
+    }).then(function(result) {
+        if (result.isConfirmed) {
+            window.location.href = logoutUrl;
+        }
+    });
+};
+
+$scope.selectedQuest = null;
+
+$scope.trackQuest = function(quest) {
+    $scope.selectedQuest = quest;
+
+    var questLocation = [quest.lat, quest.lng];
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        var playerLocation = [
+            position.coords.latitude,
+            position.coords.longitude
+        ];
+
+        if (playerMarker) map.removeLayer(playerMarker);
+        if (questMarker) map.removeLayer(questMarker);
+        if (pathLine) map.removeLayer(pathLine);
+
+        playerMarker = L.marker(playerLocation)
+            .addTo(map)
+            .bindPopup("You are here");
+
+        questMarker = L.marker(questLocation)
+            .addTo(map)
+            .bindPopup("Quest: " + quest.title);
+
+        pathLine = L.polyline([playerLocation, questLocation], {
+            weight: 5
+        }).addTo(map);
+
+        map.fitBounds(pathLine.getBounds());
+        $scope.$apply();
+    });
+};
+
+    // map Code
+    var map;
+    var questMarker;
+    var playerMarker;
+    var pathLine;
+
+    $scope.initMap = function() {
+        map = L.map('questMap').setView([10.7202, 122.5621], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+    };
+
     // custom modal
     $scope.customModal = function(options) {
     return Swal.fire({

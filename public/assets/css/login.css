@@ -1,0 +1,192 @@
+.witcher-login-body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        linear-gradient(rgba(10, 6, 2, 0.85), rgba(10, 6, 2, 0.95)),
+        url("https://www.transparenttextures.com/patterns/wood-pattern.png");
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'MedievalSharp', cursive;
+    color: #e8d6a5;
+}
+
+.witcher-login-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.witcher-login-card {
+    max-width: 430px;
+    margin: auto;
+    padding: 35px 30px;
+    background:
+        linear-gradient(rgba(45, 28, 12, 0.95), rgba(20, 12, 5, 0.98));
+    border: 3px solid #8b642d;
+    border-radius: 18px;
+    box-shadow:
+        0 0 25px rgba(0, 0, 0, 0.8),
+        inset 0 0 25px rgba(214, 181, 109, 0.12);
+    position: relative;
+}
+
+.witcher-login-card::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(214, 181, 109, 0.35);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.login-emblem {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-emblem img {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    border: 3px solid #d6b56d;
+    object-fit: cover;
+    box-shadow: 0 0 18px rgba(214, 181, 109, 0.45);
+}
+
+.login-title {
+    text-align: center;
+    color: #d6b56d;
+    font-size: 32px;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: #bfa76f;
+    margin-bottom: 25px;
+}
+
+.quest-field {
+    margin-bottom: 18px;
+}
+
+.quest-field label {
+    display: block;
+    margin-bottom: 6px;
+    color: #d6b56d;
+    font-size: 15px;
+}
+
+.quest-field input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #120b05;
+    border: 1px solid #8b642d;
+    color: #f1dfaa;
+    padding: 13px 14px;
+    border-radius: 8px;
+    outline: none;
+    font-family: Arial, sans-serif;
+}
+
+.quest-field input:focus {
+    border-color: #d6b56d;
+    box-shadow: 0 0 10px rgba(214, 181, 109, 0.35);
+}
+
+.quest-field small {
+    color: #ff8a8a;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+}
+
+.quest-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 20px;
+    color: #d8c48a;
+}
+
+.quest-login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(#9b6b25, #4b2d0d);
+    color: #f7e7b0;
+    border: 2px solid #d6b56d;
+    border-radius: 10px;
+    font-size: 18px;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #1f1205;
+    transition: 0.2s;
+}
+
+.quest-login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #1f1205;
+    filter: brightness(1.15);
+}
+
+.quest-login-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 #1f1205;
+}
+
+.quest-links {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.quest-links a {
+    color: #d6b56d;
+    text-decoration: none;
+}
+
+.quest-links a:hover {
+    text-decoration: underline;
+}
+
+.quest-links span {
+    margin: 0 8px;
+    color: #8b642d;
+}
+
+.quest-alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 18px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.quest-alert.danger {
+    background: rgba(120, 20, 20, 0.8);
+    border: 1px solid #ff7777;
+    color: #ffd6d6;
+}
+
+.quest-alert.success {
+    background: rgba(25, 95, 45, 0.8);
+    border: 1px solid #7cff9e;
+    color: #ddffe5;
+}
+
+.quest-footer {
+    text-align: center;
+    margin-top: 28px;
+    color: #8f7a4d;
+    font-size: 13px;
+}
+
+@media (max-width: 480px) {
+    .witcher-login-card {
+        padding: 28px 22px;
+    }
+
+    .login-title {
+        font-size: 26px;
+    }
+}
