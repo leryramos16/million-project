@@ -5,6 +5,7 @@ import '../../core/network/api_client.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/map_launcher.dart';
 import '../../data/models/quest.dart';
 import '../../widgets/coin_chip.dart';
 import '../../widgets/confirm_dialog.dart';
@@ -119,6 +120,32 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
                               const SizedBox(height: 14),
                               Text('Posted by ${_quest!.creatorUsername}', style: AppTheme.body(12, color: AppColors.textMuted)),
                             ],
+                            if (_quest!.location != null && _quest!.location!.isNotEmpty) ...[
+                              const SizedBox(height: 14),
+                              InkWell(
+                                onTap: _quest!.hasCoordinates
+                                    ? () => openInMaps(_quest!.lat!, _quest!.lng!, label: _quest!.location)
+                                    : null,
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.location_on_outlined, size: 16, color: AppColors.textSecondary),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        _quest!.location!,
+                                        style: AppTheme.body(
+                                          13,
+                                          color: _quest!.hasCoordinates ? AppColors.info : AppColors.textSecondary,
+                                          weight: _quest!.hasCoordinates ? FontWeight.w600 : null,
+                                        ),
+                                      ),
+                                    ),
+                                    if (_quest!.hasCoordinates)
+                                      const Icon(Icons.open_in_new, size: 14, color: AppColors.info),
+                                  ],
+                                ),
+                              ),
+                            ],
                             const SizedBox(height: 24),
                             if (_quest!.status == 'approved')
                               SizedBox(
@@ -129,7 +156,7 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
                                       ? const SizedBox(
                                           width: 20,
                                           height: 20,
-                                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                          child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary),
                                         )
                                       : const Text('Accept quest'),
                                 ),

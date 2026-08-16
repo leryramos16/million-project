@@ -1,55 +1,58 @@
 import 'package:flutter/material.dart';
 
-/// Clean, modern palette for a mainstream consumer app — light surfaces,
-/// one confident accent color, soft pastel tags instead of heavy borders.
+/// Dark, monochrome-first palette — black background, white text/CTAs.
+/// Small functional accent colors are kept only where they carry meaning
+/// (quest type, difficulty, status, success/danger), so those stay readable
+/// at a glance even in an otherwise black-and-white UI.
 class AppColors {
   AppColors._();
 
-  static const background = Color(0xFFF6F7FB);
-  static const surface = Colors.white;
-  static const border = Color(0xFFE5E7EB);
+  static const background = Color(0xFF0A0A0B);
+  static const surface = Color(0xFF161618);
+  static const surfaceElevated = Color(0xFF1E1E21);
+  static const border = Color(0xFF2A2A2E);
 
-  static const textPrimary = Color(0xFF16181D);
-  static const textSecondary = Color(0xFF6B7280);
-  static const textMuted = Color(0xFF9CA3AF);
+  static const textPrimary = Color(0xFFFAFAFA);
+  static const textSecondary = Color(0xFFA1A1AA);
+  static const textMuted = Color(0xFF71717A);
 
-  static const primary = Color(0xFF5B5FEF);
-  static const primarySoft = Color(0xFFEDEEFD);
-  static const onPrimary = Colors.white;
+  static const primary = Colors.white;
+  static const onPrimary = Colors.black;
+  static const primarySoft = Color(0xFF2A2A2E);
 
-  static const success = Color(0xFF16A34A);
-  static const successSoft = Color(0xFFE8F8EE);
-  static const warning = Color(0xFFD97706);
-  static const warningSoft = Color(0xFFFDF3E4);
-  static const danger = Color(0xFFDC2626);
-  static const dangerSoft = Color(0xFFFCEAEA);
-  static const info = Color(0xFF2563EB);
-  static const infoSoft = Color(0xFFE9F0FE);
+  static const success = Color(0xFF4ADE80);
+  static const successSoft = Color(0xFF14351F);
+  static const warning = Color(0xFFFACC15);
+  static const warningSoft = Color(0xFF3A3013);
+  static const danger = Color(0xFFF87171);
+  static const dangerSoft = Color(0xFF3A1A1A);
+  static const info = Color(0xFF60A5FA);
+  static const infoSoft = Color(0xFF17263D);
 
-  static const gold = Color(0xFFD97706); // coins accent
-  static const xpFill = primary;
+  static const gold = Color(0xFFFACC15); // coins accent
+  static const xpFill = Colors.white;
 
   static Color typeColor(String type) {
     switch (type) {
       case 'side_quests':
-        return const Color(0xFF0D9488);
+        return const Color(0xFF2DD4BF);
       case 'events':
-        return const Color(0xFF9333EA);
+        return const Color(0xFFC084FC);
       case 'main_quests':
       default:
-        return primary;
+        return const Color(0xFF93C5FD);
     }
   }
 
   static Color typeSoft(String type) {
     switch (type) {
       case 'side_quests':
-        return const Color(0xFFE1F5F3);
+        return const Color(0xFF123430);
       case 'events':
-        return const Color(0xFFF4E9FC);
+        return const Color(0xFF2E1F3D);
       case 'main_quests':
       default:
-        return primarySoft;
+        return const Color(0xFF17263D);
     }
   }
 
@@ -58,9 +61,9 @@ class AppColors {
       case 'medium':
         return warning;
       case 'hard':
-        return const Color(0xFFEA580C);
+        return const Color(0xFFFB923C);
       case 'legendary':
-        return const Color(0xFF9333EA);
+        return const Color(0xFFC084FC);
       case 'easy':
       default:
         return success;
@@ -72,9 +75,9 @@ class AppColors {
       case 'medium':
         return warningSoft;
       case 'hard':
-        return const Color(0xFFFCEDE3);
+        return const Color(0xFF3A2313);
       case 'legendary':
-        return const Color(0xFFF4E9FC);
+        return const Color(0xFF2E1F3D);
       case 'easy':
       default:
         return successSoft;
@@ -88,7 +91,7 @@ class AppColors {
       case 'accepted':
         return info;
       case 'completed':
-        return const Color(0xFF9333EA);
+        return const Color(0xFFC084FC);
       case 'pending':
       default:
         return warning;
@@ -102,7 +105,7 @@ class AppColors {
       case 'accepted':
         return infoSoft;
       case 'completed':
-        return const Color(0xFFF4E9FC);
+        return const Color(0xFF2E1F3D);
       case 'pending':
       default:
         return warningSoft;

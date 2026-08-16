@@ -4,15 +4,18 @@ namespace Leryr\Mymillionpesoproject\Http;
 
 use Leryr\Mymillionpesoproject\Controllers\Api\AdminController;
 use Leryr\Mymillionpesoproject\Controllers\Api\AuthController;
+use Leryr\Mymillionpesoproject\Controllers\Api\PaymentMethodController;
 use Leryr\Mymillionpesoproject\Controllers\Api\QuestController;
 use Leryr\Mymillionpesoproject\Http\Middleware\AdminMiddleware;
 use Leryr\Mymillionpesoproject\Http\Middleware\AuthMiddleware;
 use Leryr\Mymillionpesoproject\Repositories\AchievementRepository;
 use Leryr\Mymillionpesoproject\Repositories\AuthTokenRepository;
+use Leryr\Mymillionpesoproject\Repositories\PaymentMethodRepository;
 use Leryr\Mymillionpesoproject\Repositories\QuestRepository;
 use Leryr\Mymillionpesoproject\Repositories\UserRepository;
 use Leryr\Mymillionpesoproject\Services\AchievementService;
 use Leryr\Mymillionpesoproject\Services\AuthService;
+use Leryr\Mymillionpesoproject\Services\PaymentMethodService;
 use Leryr\Mymillionpesoproject\Services\QuestService;
 use PDO;
 
@@ -37,9 +40,12 @@ class ApiRouter
         $authService = new AuthService($users, $tokens);
         $questService = new QuestService($quests, $users, $achievementService);
 
+        $paymentMethodService = new PaymentMethodService(new PaymentMethodRepository($this->db));
+
         $auth = new AuthController($authService, $users, $quests, $achievementService);
         $questController = new QuestController($questService);
         $admin = new AdminController($questService, $users);
+        $paymentMethods = new PaymentMethodController($paymentMethodService);
 
         $requireAuth = [AuthMiddleware::class, 'authenticate'];
         $requireAdmin = [AdminMiddleware::class, 'requireAdmin'];
@@ -58,6 +64,7 @@ class ApiRouter
         $this->get('/v1/quests/mine', [$questController, 'mine'], $requireAuth);
         $this->get('/v1/quests/accepted', [$questController, 'accepted'], $requireAuth);
         $this->get('/v1/quests/{id}', [$questController, 'show']);
+        $this->get('/v1/payment-methods', [$paymentMethods, 'index'], $requireAuth);
         $this->post('/v1/quests', [$questController, 'store'], $requireAuth);
         $this->post('/v1/quests/{id}/accept', [$questController, 'accept'], $requireAuth);
         $this->post('/v1/quests/{id}/complete', [$questController, 'complete'], $requireAuth);

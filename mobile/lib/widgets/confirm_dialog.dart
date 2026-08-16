@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../core/theme/app_colors.dart';
-
 Future<bool> showQuestConfirmDialog(
   BuildContext context, {
   required String title,
@@ -19,7 +17,6 @@ Future<bool> showQuestConfirmDialog(
           child: const Text('Cancel'),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
           onPressed: () => Navigator.of(context).pop(true),
           child: Text(confirmLabel),
         ),

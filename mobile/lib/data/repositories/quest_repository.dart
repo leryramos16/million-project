@@ -31,12 +31,18 @@ class QuestRepository {
     required String title,
     required String description,
     required String paymentProofPath,
+    String? location,
+    double? lat,
+    double? lng,
   }) {
     return _api.guarded(() async {
       final formData = FormData.fromMap({
         'title': title,
         'description': description,
         'payment_proof': await MultipartFile.fromFile(paymentProofPath),
+        if (location != null && location.isNotEmpty) 'creator_location': location,
+        if (lat != null) 'creator_lat': lat,
+        if (lng != null) 'creator_lng': lng,
       });
 
       await _api.postMultipart('/v1/quests', formData);

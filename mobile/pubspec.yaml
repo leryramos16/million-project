@@ -42,7 +42,9 @@ dependencies:
   image_picker: ^1.2.3
   cached_network_image: ^3.4.1
   intl: ^0.20.3
-
+  gal: ^2.3.3
+  geolocator: ^14.0.2
+  url_launcher: ^6.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

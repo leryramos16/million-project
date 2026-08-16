@@ -13,8 +13,12 @@ class QuestRepository
     public function create(array $data): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO quests (title, description, payment_proof, xp_reward, coins_reward, type, difficulty, status, created_by)
-             VALUES (:title, :description, :payment_proof, :xp, :coins, :type, :difficulty, :status, :created_by)'
+            'INSERT INTO quests
+                (title, description, payment_proof, xp_reward, coins_reward, type, difficulty, status, created_by,
+                 creator_location, creator_lat, creator_lng)
+             VALUES
+                (:title, :description, :payment_proof, :xp, :coins, :type, :difficulty, :status, :created_by,
+                 :creator_location, :creator_lat, :creator_lng)'
         );
 
         $stmt->execute([
@@ -27,6 +31,9 @@ class QuestRepository
             'difficulty' => $data['difficulty'] ?? 'easy',
             'status' => $data['status'] ?? 'pending',
             'created_by' => $data['created_by'],
+            'creator_location' => $data['creator_location'] ?? null,
+            'creator_lat' => $data['creator_lat'] ?? null,
+            'creator_lng' => $data['creator_lng'] ?? null,
         ]);
 
         return (int) $this->db->lastInsertId();

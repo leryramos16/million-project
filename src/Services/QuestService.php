@@ -76,6 +76,9 @@ class QuestService
             ? $data['difficulty']
             : 'easy';
 
+        $lat = isset($data['creator_lat']) && $data['creator_lat'] !== '' ? (float) $data['creator_lat'] : null;
+        $lng = isset($data['creator_lng']) && $data['creator_lng'] !== '' ? (float) $data['creator_lng'] : null;
+
         $questId = $this->quests->create([
             'title' => $title,
             'description' => $description,
@@ -86,6 +89,9 @@ class QuestService
             'difficulty' => $difficulty,
             'status' => 'pending',
             'created_by' => $userId,
+            'creator_location' => trim($data['creator_location'] ?? '') ?: null,
+            'creator_lat' => $lat,
+            'creator_lng' => $lng,
         ]);
 
         return ['success' => true, 'quest_id' => $questId];

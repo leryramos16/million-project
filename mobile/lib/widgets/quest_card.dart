@@ -61,6 +61,23 @@ class QuestCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        if (quest.location != null && quest.location!.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              const Icon(Icons.location_on_outlined, size: 13, color: AppColors.textMuted),
+                              const SizedBox(width: 2),
+                              Expanded(
+                                child: Text(
+                                  quest.location!,
+                                  style: AppTheme.body(11, color: AppColors.textMuted),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                         const SizedBox(height: 10),
                         Wrap(
                           spacing: 6,

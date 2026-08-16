@@ -9,6 +9,9 @@ import '../storage/token_storage.dart';
 /// (e.g. http://192.168.1.23/mymillionpesoproject/public/api).
 const String kApiBaseUrl = 'http://localhost:8080/mymillionpesoproject/public/api';
 
+/// Base URL for static assets served outside /api (uploaded images, etc).
+const String kAssetBaseUrl = 'http://localhost:8080/mymillionpesoproject/public';
+
 class ApiException implements Exception {
   ApiException(this.message, {this.errors = const {}});
 

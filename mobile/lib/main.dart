@@ -18,7 +18,7 @@ class QuestApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Quest Board',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.dark,
       routerConfig: router,
     );
   }

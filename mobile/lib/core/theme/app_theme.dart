@@ -14,17 +14,19 @@ class AppTheme {
     return GoogleFonts.inter(fontSize: size, color: color, fontWeight: weight);
   }
 
-  static ThemeData get light {
-    final base = ThemeData(useMaterial3: true, brightness: Brightness.light);
+  static ThemeData get dark {
+    final base = ThemeData(useMaterial3: true, brightness: Brightness.dark);
     final textTheme = GoogleFonts.interTextTheme(base.textTheme);
 
     return base.copyWith(
       scaffoldBackgroundColor: AppColors.background,
       colorScheme: base.colorScheme.copyWith(
+        brightness: Brightness.dark,
         primary: AppColors.primary,
         onPrimary: AppColors.onPrimary,
         secondary: AppColors.primary,
         surface: AppColors.surface,
+        onSurface: AppColors.textPrimary,
         error: AppColors.danger,
       ),
       textTheme: textTheme.apply(bodyColor: AppColors.textPrimary, displayColor: AppColors.textPrimary),
@@ -40,7 +42,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.onPrimary,
-          disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.4),
+          disabledBackgroundColor: AppColors.textMuted.withValues(alpha: 0.3),
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -49,7 +51,7 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: AppColors.textPrimary,
           side: const BorderSide(color: AppColors.border),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -58,13 +60,13 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: AppColors.textPrimary,
           textStyle: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.background,
+        fillColor: AppColors.surface,
         labelStyle: body(14, color: AppColors.textSecondary),
         hintStyle: body(14, color: AppColors.textMuted),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -95,13 +97,13 @@ class AppTheme {
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.surfaceElevated,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         titleTextStyle: heading(18),
         contentTextStyle: body(14, color: AppColors.textSecondary),
       ),
       chipTheme: base.chipTheme.copyWith(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.surface,
         selectedColor: AppColors.primarySoft,
         labelStyle: body(12, color: AppColors.textSecondary),
         side: const BorderSide(color: AppColors.border),
@@ -115,18 +117,18 @@ class AppTheme {
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => body(
             11,
-            color: states.contains(WidgetState.selected) ? AppColors.primary : AppColors.textMuted,
+            color: states.contains(WidgetState.selected) ? AppColors.textPrimary : AppColors.textMuted,
             weight: FontWeight.w600,
           ),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(
-            color: states.contains(WidgetState.selected) ? AppColors.primary : AppColors.textMuted,
+            color: states.contains(WidgetState.selected) ? AppColors.textPrimary : AppColors.textMuted,
           ),
         ),
       ),
       dividerColor: AppColors.border,
-      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.textPrimary),
     );
   }
 }

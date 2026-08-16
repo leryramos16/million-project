@@ -20,6 +20,7 @@
             <a href="<?=ROOT?>/admin" class="<?= $activeNav === 'dashboard' ? 'active' : '' ?>">Dashboard</a>
             <a href="<?=ROOT?>/admin/viewPendingRequests" class="<?= $activeNav === 'pending' ? 'active' : '' ?>">Pending Quests</a>
             <a href="<?=ROOT?>/admin/users" class="<?= $activeNav === 'users' ? 'active' : '' ?>">Adventurers</a>
+            <a href="<?=ROOT?>/admin/paymentMethods" class="<?= $activeNav === 'payments' ? 'active' : '' ?>">Payment Methods</a>
             <a href="<?=ROOT?>/logout" class="gm-logout">Logout</a>
         </nav>
     </aside>

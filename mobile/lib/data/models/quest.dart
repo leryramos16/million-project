@@ -14,6 +14,9 @@ class Quest {
     this.acceptedBy,
     this.acceptedByUsername,
     this.createdAt,
+    this.location,
+    this.lat,
+    this.lng,
   });
 
   final int id;
@@ -30,6 +33,11 @@ class Quest {
   final int? acceptedBy;
   final String? acceptedByUsername;
   final String? createdAt;
+  final String? location;
+  final double? lat;
+  final double? lng;
+
+  bool get hasCoordinates => lat != null && lng != null;
 
   factory Quest.fromJson(Map<String, dynamic> json) => Quest(
         id: json['id'] as int,
@@ -46,9 +54,19 @@ class Quest {
         acceptedBy: json['accepted_by'] as int?,
         acceptedByUsername: json['accepted_by_name'] as String?,
         createdAt: json['created_at'] as String?,
+        location: json['creator_location'] as String?,
+        lat: _parseDouble(json['creator_lat']),
+        lng: _parseDouble(json['creator_lng']),
       );
 
   String get typeLabel => type.replaceAll('_', ' ');
+}
+
+/// MySQL DECIMAL columns come back through PHP's PDO as strings, not numbers.
+double? _parseDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is num) return value.toDouble();
+  return double.tryParse(value.toString());
 }
 
 class PaginatedQuests {
