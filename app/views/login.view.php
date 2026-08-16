@@ -2,8 +2,8 @@
 <?php require "../inc/header.php"; ?>
 
 <?php
-if (isset($_SESSION['user_id'])) {
-  header('Location: /myapp/public/dashboard');
+if (isset($_SESSION['user_id']) && ($_SESSION['role'] ?? null) === 'admin') {
+  header('Location: ' . ROOT . '/admin');
   exit;
 }
 ?>
@@ -18,8 +18,8 @@ if (isset($_SESSION['user_id'])) {
       <img src="<?=ROOT?>/assets/images/REALLIFEQUEST.png" alt="Adventurer">
     </div>
 
-    <h1 class="login-title">Enter the Notice Board</h1>
-    <p class="login-subtitle">Sign in, adventurer, and continue your quest.</p>
+    <h1 class="login-title">Game Master Console</h1>
+    <p class="login-subtitle">Sign in to manage the notice board.</p>
 
     <?php if (!empty($error)): ?>
       <div class="quest-alert danger">
@@ -57,21 +57,11 @@ if (isset($_SESSION['user_id'])) {
       <small><?= $passwordErr ?></small>
     </div>
 
-    <div class="quest-remember">
-      <input type="checkbox" name="remember" id="remember">
-      <label for="remember">Remember me</label>
-    </div>
-
     <button class="quest-login-btn" type="submit">
-      Begin Quest
+      Enter the Console
     </button>
 
-    <div class="quest-links">
-      <a href="<?=ROOT?>/register">Create Adventurer</a>
-      <span>|</span>
-      <a href="<?= ROOT ?>/forgotpassword">Forgot Password?</a>
-    </div>
-
+    <p class="quest-footer">Players: use the Quest companion app on Android.</p>
     <p class="quest-footer">&copy; 2026 Notice Board</p>
 
   </form>

@@ -1,34 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Quest</title>
-</head>
-<body>
+<?php $title = 'Edit Quest'; $activeNav = 'pending'; require __DIR__ . '/_header.php'; ?>
 
-<h2>Edit Quest</h2>
+<div class="gm-topbar">
+    <div>
+        <h1 class="gm-title">Edit Quest</h1>
+        <p class="gm-subtitle">Adjust the contract before publishing it to the notice board.</p>
+    </div>
+</div>
 
-<a href="<?= ROOT ?>/admin/viewPendingRequests">Back</a>
+<a href="<?= ROOT ?>/admin/viewPendingRequests" class="gm-btn" style="margin-bottom:20px; display:inline-block;">Back</a>
 
-<form method="POST">
+<div class="gm-form-card">
+    <form method="POST">
+        <div class="gm-form-group">
+            <label>Title</label>
+            <input type="text" name="title" value="<?= htmlspecialchars($quest['title']) ?>" required>
+        </div>
 
-    <label>Title</label><br>
-    <input type="text" name="title" 
-        value="<?= htmlspecialchars($data['quest']['title']) ?>"><br><br>
+        <div class="gm-form-group">
+            <label>Description</label>
+            <textarea name="description" rows="4" required><?= htmlspecialchars($quest['description']) ?></textarea>
+        </div>
 
-    <label>Description</label><br>
-    <textarea name="description"><?= htmlspecialchars($data['quest']['description']) ?></textarea><br><br>
+        <div class="gm-form-group">
+            <label>XP Reward</label>
+            <input type="number" name="xp_reward" value="<?= (int) $quest['xp_reward'] ?>" min="0">
+        </div>
 
-    <label>XP Reward</label>
-    <input type="number" name="xp_reward">
+        <div class="gm-form-group">
+            <label>Coins Reward</label>
+            <input type="number" name="coins_reward" value="<?= (int) $quest['coins_reward'] ?>" min="0">
+        </div>
 
-    <label>Coins Reward</label>
-    <input type="number" name="coins_reward">
+        <div class="gm-form-group">
+            <label>Type</label>
+            <select name="type">
+                <?php foreach (['main_quests' => 'Main', 'side_quests' => 'Side', 'events' => 'Events'] as $value => $label): ?>
+                    <option value="<?= $value ?>" <?= $quest['type'] === $value ? 'selected' : '' ?>><?= $label ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-    <label>Type</label>
-    <input type="text" name="type">
-    <button type="submit">Update Quest</button>
+        <div class="gm-form-group">
+            <label>Difficulty</label>
+            <select name="difficulty">
+                <?php foreach (['easy', 'medium', 'hard', 'legendary'] as $value): ?>
+                    <option value="<?= $value ?>" <?= ($quest['difficulty'] ?? 'easy') === $value ? 'selected' : '' ?>><?= ucfirst($value) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-</form>
+        <button type="submit" class="gm-btn gm-btn-primary">Update Quest</button>
+    </form>
+</div>
 
-</body>
-</html>
+<?php require __DIR__ . '/_footer.php'; ?>

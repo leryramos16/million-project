@@ -1,44 +1,32 @@
-<a href="<?= ROOT ?>/logout">Logout</a>
-<h2>Create New Quest</h2>
-<a href="<?= ROOT ?>/admin/viewPendingRequests">Pending request</a>
+<?php $title = 'Dashboard'; $activeNav = 'dashboard'; require __DIR__ . '/_header.php'; ?>
 
-<?php 
-// Show general error
-if (!empty($data['error'])) {
-    echo "<p style='color:red;'>{$data['error']}</p>";
-}
+<div class="gm-topbar">
+    <div>
+        <h1 class="gm-title">Game Master Console</h1>
+        <p class="gm-subtitle">Oversee the notice board, adventurers, and pending contracts.</p>
+    </div>
+</div>
 
-// Show success message if set
-if (isset($_SESSION['success_message'])) {
-    echo "<p style='color:green;'>{$_SESSION['success_message']}</p>";
-    unset($_SESSION['success_message']);
-}
-?>
+<?php if (!empty($_SESSION['success'])): ?>
+    <div class="gm-alert success"><?= htmlspecialchars($_SESSION['success']) ?></div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
 
-<form method="POST" action="<?= ROOT ?>/quests/create">
-    <label>Title:</label><br>
-   <input type="text" name="title" value="<?= htmlspecialchars($data['title'] ?? '') ?>">
-    
-    <br><br>
+<div class="gm-stat-grid">
+    <div class="gm-stat-card">
+        <div class="gm-stat-value"><?= (int) ($stats['pending_quests'] ?? 0) ?></div>
+        <div class="gm-stat-label">Pending Quests</div>
+    </div>
+    <div class="gm-stat-card">
+        <div class="gm-stat-value"><?= (int) ($stats['total_users'] ?? 0) ?></div>
+        <div class="gm-stat-label">Adventurers</div>
+    </div>
+    <div class="gm-stat-card">
+        <div class="gm-stat-value"><?= (int) ($stats['completed_today'] ?? 0) ?></div>
+        <div class="gm-stat-label">Completed Today</div>
+    </div>
+</div>
 
-    <label>Description:</label><br>
-    <input type="text" name="description" value="<?= htmlspecialchars($data['description'] ?? '') ?>">
-    
-    <br><br>
+<a href="<?= ROOT ?>/admin/viewPendingRequests" class="gm-btn gm-btn-primary">Review Pending Quests</a>
 
-    <label>XP Reward:</label><br>
-    <input type="text" name="xp_reward" value="<?= htmlspecialchars($data['xp_reward'] ?? '') ?>"><br>
-
-    <label>Coins Reward:</label><br>
-    <input type="text" name="coins_reward" value="<?= htmlspecialchars($data['coins_reward'] ?? '') ?>"><br>
-
-    <label>Type:</label><br>
-    <select name="type">
-        <option value="main_quests" <?= $data['type'] ?? '' === 'main_quests' ? 'selected' : '' ?>>Main</option>
-        <option value="side_quests" <?= $data['type'] ?? '' === 'side_quests' ? 'selected' : '' ?>>Side</option>
-        <option value="events" <?= $data['type'] ?? '' === 'events' ? 'selected' : '' ?>>Events</option>
-    </select>
-    <br><br>
-
-    <button type="submit">Create Quest</button>
-</form>
+<?php require __DIR__ . '/_footer.php'; ?>

@@ -1,5 +1,8 @@
 RewriteEngine On
 
+#REST API: /api/v1/... -> api/index.php?url=v1/...
+RewriteRule ^api/(.*)$ api/index.php?url=$1 [L,QSA]
+
 #accept loading of actual files and directories
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

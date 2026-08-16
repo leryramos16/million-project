@@ -4,9 +4,10 @@
         {
             /**database config */
            define('DBNAME', 'millionproject');
-           define('DBHOST', 'localhost'); 
-           define('DBUSER', 'root'); 
-           define('DBPASS', ''); 
+           define('DBHOST', 'localhost');
+           define('DBPORT', '3307');
+           define('DBUSER', 'root');
+           define('DBPASS', '');
 
            define('SITE_URL', 'http://localhost/mymillionpesoproject/public');
 
@@ -16,10 +17,11 @@
         } else {
             /**database config when deploying */
            define('DBNAME', 'millionproject');
-           define('DBHOST', 'localhost'); 
-           define('DBUSER', 'root'); 
-           define('DBPASS', ''); 
-            
+           define('DBHOST', 'localhost');
+           define('DBPORT', '3307');
+           define('DBUSER', 'root');
+           define('DBPASS', '');
+
            define('ROOT', 'https://www.yourwebsite.com');
         }
 
@@ -32,7 +34,7 @@
     /**  create PDO connection */
 
     try {
-        $conn = new PDO("mysql:host=" . DBHOST . ";dbname=" . DBNAME, DBUSER, DBPASS);
+        $conn = new PDO("mysql:host=" . DBHOST . ";port=" . DBPORT . ";dbname=" . DBNAME, DBUSER, DBPASS);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die("Database Connection failed: " . $e->getMessage());
