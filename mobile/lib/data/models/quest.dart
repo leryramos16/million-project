@@ -1,3 +1,5 @@
+import '../../core/network/api_client.dart';
+
 class Quest {
   Quest({
     required this.id,
@@ -11,6 +13,7 @@ class Quest {
     this.paymentProof,
     this.createdBy,
     this.creatorUsername,
+    this.creatorAvatar,
     this.acceptedBy,
     this.acceptedByUsername,
     this.createdAt,
@@ -30,6 +33,7 @@ class Quest {
   final String? paymentProof;
   final int? createdBy;
   final String? creatorUsername;
+  final String? creatorAvatar;
   final int? acceptedBy;
   final String? acceptedByUsername;
   final String? createdAt;
@@ -38,6 +42,8 @@ class Quest {
   final double? lng;
 
   bool get hasCoordinates => lat != null && lng != null;
+
+  String? get creatorAvatarUrl => creatorAvatar == null ? null : '$kAssetBaseUrl/uploads/avatars/$creatorAvatar';
 
   factory Quest.fromJson(Map<String, dynamic> json) => Quest(
         id: json['id'] as int,
@@ -51,6 +57,7 @@ class Quest {
         paymentProof: json['payment_proof'] as String?,
         createdBy: json['created_by'] as int?,
         creatorUsername: json['username'] as String?,
+        creatorAvatar: json['creator_avatar'] as String?,
         acceptedBy: json['accepted_by'] as int?,
         acceptedByUsername: json['accepted_by_name'] as String?,
         createdAt: json['created_at'] as String?,

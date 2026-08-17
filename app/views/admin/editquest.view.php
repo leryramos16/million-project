@@ -22,13 +22,20 @@
         </div>
 
         <div class="gm-form-group">
+            <label>Requester paid</label>
+            <div style="padding:10px 12px; background:rgba(0,0,0,0.05); border-radius:6px;">
+                ₱<?= (int) ($quest['amount_paid'] ?? 0) ?> — keep coins reward below this to stay profitable.
+            </div>
+        </div>
+
+        <div class="gm-form-group">
             <label>XP Reward</label>
             <input type="number" name="xp_reward" value="<?= (int) $quest['xp_reward'] ?>" min="0">
         </div>
 
         <div class="gm-form-group">
             <label>Coins Reward</label>
-            <input type="number" name="coins_reward" value="<?= (int) $quest['coins_reward'] ?>" min="0">
+            <input type="number" name="coins_reward" value="<?= (int) $quest['coins_reward'] ?>" min="0" max="<?= (int) ($quest['amount_paid'] ?? 0) ?>">
         </div>
 
         <div class="gm-form-group">

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/network/api_client.dart';
 import '../../core/providers.dart';
@@ -23,6 +24,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   PlayerStats? _stats;
   List<Quest> _accepted = [];
   bool _loading = true;
+  bool _uploadingAvatar = false;
 
   @override
   void initState() {
@@ -51,6 +53,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (mounted) context.go('/login');
   }
 
+  Future<void> _changeAvatar() async {
+    if (_uploadingAvatar) return;
+    setState(() => _uploadingAvatar = true);
+
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85, maxWidth: 800);
+      if (image == null) return;
+
+      await ref.read(userRepositoryProvider).uploadAvatar(image.path);
+      await _load();
+    } on ApiException catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) setState(() => _uploadingAvatar = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return QuestScaffold(
@@ -65,7 +84,23 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 40),
                 children: [
-                  if (_stats != null) PlayerHeader(stats: _stats!),
+                  if (_stats != null)
+                    PlayerHeader(
+                      stats: _stats!,
+                      onAvatarTap: _changeAvatar,
+                      avatarUploading: _uploadingAvatar,
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.push('/cashout'),
+                        icon: const Icon(Icons.account_balance_wallet_outlined, size: 18),
+                        label: const Text('Cash Out Coins'),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
                     child: Text('Quests I\'ve accepted', style: AppTheme.heading(16)),

@@ -73,15 +73,17 @@ class _MyRequestsScreenState extends ConsumerState<MyRequestsScreen> with Single
       final achievements = await ref.read(questRepositoryProvider).complete(quest.id);
       if (!mounted) return;
 
+      final helperName = quest.acceptedByUsername ?? 'The helper';
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Quest completed. XP and coins rewarded!')),
+        SnackBar(
+          content: Text('Quest completed! $helperName earned ${quest.xpReward} XP and ${quest.coinsReward} coins.'),
+        ),
       );
-
       for (final achievement in achievements) {
         if (!mounted) return;
         await showQuestConfirmDialog(
           context,
-          title: 'Achievement Unlocked!',
+          title: '🎉 $helperName unlocked an achievement!',
           message: achievement.title,
           confirmLabel: 'Nice!',
         );

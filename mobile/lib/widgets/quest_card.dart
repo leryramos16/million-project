@@ -5,6 +5,7 @@ import '../core/theme/app_theme.dart';
 import '../data/models/quest.dart';
 import 'coin_chip.dart';
 import 'quest_badges.dart';
+import 'user_avatar.dart';
 
 /// A clean, flat quest card — colored left accent by quest type, no
 /// skeuomorphic textures.
@@ -48,6 +49,16 @@ class QuestCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        if (quest.creatorUsername != null) ...[
+                          Row(
+                            children: [
+                              UserAvatar(url: quest.creatorAvatarUrl, radius: 11, username: quest.creatorUsername),
+                              const SizedBox(width: 6),
+                              Text(quest.creatorUsername!, style: AppTheme.body(12, color: AppColors.textSecondary, weight: FontWeight.w600)),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                        ],
                         Text(
                           quest.title,
                           style: AppTheme.heading(15),

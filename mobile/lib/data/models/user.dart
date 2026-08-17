@@ -1,3 +1,5 @@
+import '../../core/network/api_client.dart';
+
 class AppUser {
   AppUser({
     required this.id,
@@ -18,6 +20,8 @@ class AppUser {
   final int xp;
   final int coins;
   final String? profileImage;
+
+  String? get avatarUrl => profileImage == null ? null : '$kAssetBaseUrl/uploads/avatars/$profileImage';
 
   factory AppUser.fromJson(Map<String, dynamic> json) => AppUser(
         id: json['id'] as int,
@@ -51,6 +55,8 @@ class PlayerStats {
   final String? profileImage;
 
   double get xpProgress => requiredXp <= 0 ? 0 : (xp / requiredXp).clamp(0, 1).toDouble();
+
+  String? get avatarUrl => profileImage == null ? null : '$kAssetBaseUrl/uploads/avatars/$profileImage';
 
   factory PlayerStats.fromJson(Map<String, dynamic> json) => PlayerStats(
         username: json['username'] as String,

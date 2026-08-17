@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/models/user.dart';
 import '../data/repositories/auth_repository.dart';
+import '../data/repositories/cashout_repository.dart';
 import '../data/repositories/payment_method_repository.dart';
 import '../data/repositories/quest_repository.dart';
 import '../data/repositories/user_repository.dart';
@@ -21,6 +22,8 @@ final userRepositoryProvider = Provider((ref) => UserRepository(ref.watch(apiCli
 final questRepositoryProvider = Provider((ref) => QuestRepository(ref.watch(apiClientProvider)));
 
 final paymentMethodRepositoryProvider = Provider((ref) => PaymentMethodRepository(ref.watch(apiClientProvider)));
+
+final cashoutRepositoryProvider = Provider((ref) => CashoutRepository(ref.watch(apiClientProvider)));
 
 enum AuthStatus { unknown, authenticated, unauthenticated }
 

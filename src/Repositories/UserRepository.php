@@ -70,6 +70,19 @@ class UserRepository
         $stmt->execute(['xp' => $xp, 'coins' => $coins, 'level' => $level, 'id' => $id]);
     }
 
+    /** Atomically adjusts a user's coin balance (positive to add, negative to deduct). */
+    public function adjustCoins(int $id, int $delta): void
+    {
+        $stmt = $this->db->prepare('UPDATE users SET coins = coins + :delta WHERE id = :id');
+        $stmt->execute(['delta' => $delta, 'id' => $id]);
+    }
+
+    public function sumCoins(): int
+    {
+        return (int) $this->db->query("SELECT COALESCE(SUM(coins), 0) FROM users WHERE role != 'admin'")
+            ->fetchColumn();
+    }
+
     public function updateProfileImage(int $id, string $filename): void
     {
         $stmt = $this->db->prepare('UPDATE users SET profile_image = :image WHERE id = :id');
@@ -86,5 +99,20 @@ class UserRepository
     public function count(): int
     {
         return (int) $this->db->query('SELECT COUNT(*) FROM users')->fetchColumn();
+    }
+
+    public function topPlayers(int $limit): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, username, level, xp, coins, profile_image
+             FROM users
+             WHERE role != \'admin\'
+             ORDER BY level DESC, xp DESC
+             LIMIT :limit'
+        );
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

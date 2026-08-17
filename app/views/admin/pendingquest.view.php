@@ -24,7 +24,12 @@
                     <span class="gm-badge difficulty-<?= htmlspecialchars($quest['difficulty']) ?>"><?= htmlspecialchars($quest['difficulty']) ?></span>
                     <span class="gm-badge type">XP <?= (int) $quest['xp_reward'] ?></span>
                     <span class="gm-badge type">Coins <?= (int) $quest['coins_reward'] ?></span>
+                    <span class="gm-badge difficulty-easy">Paid ₱<?= (int) ($quest['amount_paid'] ?? 0) ?></span>
                 </div>
+
+                <?php if (!empty($quest['amount_paid']) && (int) $quest['coins_reward'] > (int) $quest['amount_paid']): ?>
+                    <p style="color:#c0392b;"><strong>⚠ Reward exceeds what was paid — you'd lose money publishing this as-is.</strong></p>
+                <?php endif; ?>
 
                 <?php if (!empty($quest['username'])): ?>
                     <p><strong>Submitted by:</strong> <?= htmlspecialchars($quest['username']) ?></p>

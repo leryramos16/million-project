@@ -11,6 +11,9 @@ use Leryr\Mymillionpesoproject\Services\AuthService;
 
 class AuthController
 {
+    private const AVATAR_UPLOAD_DIR = __DIR__ . '/../../../public/uploads/avatars/';
+    private const ALLOWED_AVATAR_TYPES = ['image/jpeg', 'image/png', 'image/jpg'];
+
     public function __construct(
         private AuthService $auth,
         private UserRepository $users,
@@ -115,5 +118,33 @@ class AuthController
     public function achievements(Request $request): void
     {
         JsonResponse::success($this->achievements->listForUser($request->user['id']));
+    }
+
+    public function updateAvatar(Request $request): void
+    {
+        $file = $request->file('avatar');
+
+        if (!$file) {
+            JsonResponse::error('No avatar file provided', 422);
+        }
+
+        if (!in_array($file['type'], self::ALLOWED_AVATAR_TYPES, true)) {
+            JsonResponse::error('Only JPG and PNG files are allowed', 422);
+        }
+
+        if (!is_dir(self::AVATAR_UPLOAD_DIR)) {
+            mkdir(self::AVATAR_UPLOAD_DIR, 0777, true);
+        }
+
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION) ?: 'jpg';
+        $filename = 'avatar_' . $request->user['id'] . '_' . time() . '.' . $extension;
+
+        if (!move_uploaded_file($file['tmp_name'], self::AVATAR_UPLOAD_DIR . $filename)) {
+            JsonResponse::error('Failed to save avatar', 500);
+        }
+
+        $this->users->updateProfileImage($request->user['id'], $filename);
+
+        JsonResponse::success(['profile_image' => $filename], 'Avatar updated');
     }
 }

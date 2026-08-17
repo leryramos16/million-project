@@ -14,10 +14,10 @@ class QuestRepository
     {
         $stmt = $this->db->prepare(
             'INSERT INTO quests
-                (title, description, payment_proof, xp_reward, coins_reward, type, difficulty, status, created_by,
+                (title, description, payment_proof, amount_paid, xp_reward, coins_reward, type, difficulty, status, created_by,
                  creator_location, creator_lat, creator_lng)
              VALUES
-                (:title, :description, :payment_proof, :xp, :coins, :type, :difficulty, :status, :created_by,
+                (:title, :description, :payment_proof, :amount_paid, :xp, :coins, :type, :difficulty, :status, :created_by,
                  :creator_location, :creator_lat, :creator_lng)'
         );
 
@@ -25,6 +25,7 @@ class QuestRepository
             'title' => $data['title'],
             'description' => $data['description'],
             'payment_proof' => $data['payment_proof'] ?? null,
+            'amount_paid' => $data['amount_paid'] ?? null,
             'xp' => $data['xp_reward'] ?? 0,
             'coins' => $data['coins_reward'] ?? 0,
             'type' => $data['type'] ?? 'side_quests',
@@ -41,7 +42,7 @@ class QuestRepository
 
     public function findApproved(?string $type, int $limit, int $offset): array
     {
-        $sql = "SELECT q.*, u.username FROM quests q
+        $sql = "SELECT q.*, u.username, u.profile_image AS creator_avatar FROM quests q
                 LEFT JOIN users u ON u.id = q.created_by
                 WHERE q.status = 'approved'";
 
@@ -84,7 +85,7 @@ class QuestRepository
     public function findById(int $id): ?array
     {
         $stmt = $this->db->prepare(
-            "SELECT q.*, u.username FROM quests q
+            "SELECT q.*, u.username, u.profile_image AS creator_avatar FROM quests q
              LEFT JOIN users u ON u.id = q.created_by
              WHERE q.id = :id LIMIT 1"
         );
@@ -224,6 +225,22 @@ class QuestRepository
     {
         return (int) $this->db->query(
             "SELECT COUNT(*) FROM quests WHERE status = 'completed' AND DATE(created_at) = CURDATE()"
+        )->fetchColumn();
+    }
+
+    public function countCreatedByUser(int $userId): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM quests WHERE created_by = :user_id');
+        $stmt->execute(['user_id' => $userId]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /** Pesos actually collected: only quests an admin has reviewed and approved onward count. */
+    public function sumAmountPaid(): int
+    {
+        return (int) $this->db->query(
+            "SELECT COALESCE(SUM(amount_paid), 0) FROM quests WHERE status IN ('approved', 'accepted', 'completed')"
         )->fetchColumn();
     }
 }

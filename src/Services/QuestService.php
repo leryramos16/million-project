@@ -10,6 +10,7 @@ class QuestService
     private const ALLOWED_TYPES = ['main_quests', 'side_quests', 'events'];
     private const ALLOWED_DIFFICULTIES = ['easy', 'medium', 'hard', 'legendary'];
     private const UPLOAD_DIR = __DIR__ . '/../../public/uploads/payments/';
+    private const MIN_AMOUNT_PAID = 5;
 
     public function __construct(
         private QuestRepository $quests,
@@ -54,6 +55,12 @@ class QuestService
             return ['success' => false, 'message' => 'Payment proof is required'];
         }
 
+        $amountPaid = (int) round((float) ($data['amount_paid'] ?? 0));
+
+        if ($amountPaid < self::MIN_AMOUNT_PAID) {
+            return ['success' => false, 'message' => 'Minimum payment is ₱' . self::MIN_AMOUNT_PAID];
+        }
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
         if (!in_array($file['type'], $allowedTypes, true)) {
@@ -83,6 +90,7 @@ class QuestService
             'title' => $title,
             'description' => $description,
             'payment_proof' => $fileName,
+            'amount_paid' => $amountPaid,
             'xp_reward' => (int) ($data['xp_reward'] ?? 0),
             'coins_reward' => (int) ($data['coins_reward'] ?? 0),
             'type' => $type,
@@ -92,6 +100,10 @@ class QuestService
             'creator_location' => trim($data['creator_location'] ?? '') ?: null,
             'creator_lat' => $lat,
             'creator_lng' => $lng,
+        ]);
+
+        $this->achievements->checkAndUnlock($userId, [
+            'quests_posted' => $this->quests->countCreatedByUser($userId),
         ]);
 
         return ['success' => true, 'quest_id' => $questId];
@@ -128,8 +140,10 @@ class QuestService
         $this->users->updateStats($acceptedUserId, $newXp, $newCoins, $newLevel);
         $this->quests->markCompleted($questId);
 
-        $completedCount = $this->quests->countCompletedByUser($acceptedUserId);
-        $newAchievements = $this->achievements->checkAndUnlockForCompletedQuests($acceptedUserId, $completedCount);
+        $newAchievements = $this->achievements->checkAndUnlock($acceptedUserId, [
+            'completed_quests' => $this->quests->countCompletedByUser($acceptedUserId),
+            'level_reached' => $newLevel,
+        ]);
 
         return ['success' => true, 'new_achievements' => $newAchievements];
     }

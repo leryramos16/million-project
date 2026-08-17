@@ -24,9 +24,12 @@ class AddQuestScreen extends ConsumerStatefulWidget {
 }
 
 class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
+  static const _minAmount = 5;
+
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
+  final _amountController = TextEditingController();
   final _locationService = LocationService();
 
   XFile? _proofImage;
@@ -61,6 +64,7 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _amountController.dispose();
     super.dispose();
   }
 
@@ -95,6 +99,13 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
       setState(() => _error = 'Title and description are required.');
       return;
     }
+
+    final amount = int.tryParse(_amountController.text.trim()) ?? 0;
+    if (amount < _minAmount) {
+      setState(() => _error = 'Minimum payment is ₱$_minAmount.');
+      return;
+    }
+
     if (_proofImage == null) {
       setState(() => _error = 'Please upload a payment screenshot.');
       return;
@@ -110,6 +121,7 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
             title: _titleController.text.trim(),
             description: _descriptionController.text.trim(),
             paymentProofPath: _proofImage!.path,
+            amountPaid: amount,
             location: _locationController.text.trim(),
             lat: _lat,
             lng: _lng,
@@ -176,6 +188,19 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
                     Text(_error!, style: AppTheme.body(13, color: AppColors.danger)),
                     const SizedBox(height: 12),
                   ],
+                  TextField(
+                    controller: _amountController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Amount you\'re paying (₱)',
+                      prefixText: '₱ ',
+                      hintText: 'e.g. 10',
+                      helperText: 'Whole pesos only, minimum ₱$_minAmount. This is what you already sent — '
+                          'the reward you\'re offering to helpers comes out of this.',
+                      helperMaxLines: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
                   TextField(
                     controller: _titleController,
                     decoration: const InputDecoration(labelText: 'Title'),

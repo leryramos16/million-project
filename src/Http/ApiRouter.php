@@ -4,17 +4,21 @@ namespace Leryr\Mymillionpesoproject\Http;
 
 use Leryr\Mymillionpesoproject\Controllers\Api\AdminController;
 use Leryr\Mymillionpesoproject\Controllers\Api\AuthController;
+use Leryr\Mymillionpesoproject\Controllers\Api\CashoutController;
+use Leryr\Mymillionpesoproject\Controllers\Api\LeaderboardController;
 use Leryr\Mymillionpesoproject\Controllers\Api\PaymentMethodController;
 use Leryr\Mymillionpesoproject\Controllers\Api\QuestController;
 use Leryr\Mymillionpesoproject\Http\Middleware\AdminMiddleware;
 use Leryr\Mymillionpesoproject\Http\Middleware\AuthMiddleware;
 use Leryr\Mymillionpesoproject\Repositories\AchievementRepository;
 use Leryr\Mymillionpesoproject\Repositories\AuthTokenRepository;
+use Leryr\Mymillionpesoproject\Repositories\CashoutRequestRepository;
 use Leryr\Mymillionpesoproject\Repositories\PaymentMethodRepository;
 use Leryr\Mymillionpesoproject\Repositories\QuestRepository;
 use Leryr\Mymillionpesoproject\Repositories\UserRepository;
 use Leryr\Mymillionpesoproject\Services\AchievementService;
 use Leryr\Mymillionpesoproject\Services\AuthService;
+use Leryr\Mymillionpesoproject\Services\CashoutService;
 use Leryr\Mymillionpesoproject\Services\PaymentMethodService;
 use Leryr\Mymillionpesoproject\Services\QuestService;
 use PDO;
@@ -41,11 +45,14 @@ class ApiRouter
         $questService = new QuestService($quests, $users, $achievementService);
 
         $paymentMethodService = new PaymentMethodService(new PaymentMethodRepository($this->db));
+        $cashoutService = new CashoutService($this->db, new CashoutRequestRepository($this->db), $users, $quests);
 
         $auth = new AuthController($authService, $users, $quests, $achievementService);
         $questController = new QuestController($questService);
         $admin = new AdminController($questService, $users);
         $paymentMethods = new PaymentMethodController($paymentMethodService);
+        $leaderboard = new LeaderboardController($users);
+        $cashout = new CashoutController($cashoutService);
 
         $requireAuth = [AuthMiddleware::class, 'authenticate'];
         $requireAdmin = [AdminMiddleware::class, 'requireAdmin'];
@@ -58,6 +65,7 @@ class ApiRouter
         $this->get('/v1/me', [$auth, 'me'], $requireAuth);
         $this->get('/v1/me/stats', [$auth, 'stats'], $requireAuth);
         $this->get('/v1/me/achievements', [$auth, 'achievements'], $requireAuth);
+        $this->post('/v1/me/avatar', [$auth, 'updateAvatar'], $requireAuth);
 
         // Quests
         $this->get('/v1/quests', [$questController, 'index']);
@@ -65,9 +73,12 @@ class ApiRouter
         $this->get('/v1/quests/accepted', [$questController, 'accepted'], $requireAuth);
         $this->get('/v1/quests/{id}', [$questController, 'show']);
         $this->get('/v1/payment-methods', [$paymentMethods, 'index'], $requireAuth);
+        $this->get('/v1/leaderboard', [$leaderboard, 'index'], $requireAuth);
         $this->post('/v1/quests', [$questController, 'store'], $requireAuth);
         $this->post('/v1/quests/{id}/accept', [$questController, 'accept'], $requireAuth);
         $this->post('/v1/quests/{id}/complete', [$questController, 'complete'], $requireAuth);
+        $this->post('/v1/me/cashout', [$cashout, 'store'], $requireAuth);
+        $this->get('/v1/me/cashout', [$cashout, 'history'], $requireAuth);
 
         // Admin
         $this->get('/v1/admin/quests/pending', [$admin, 'pendingQuests'], $requireAdmin);

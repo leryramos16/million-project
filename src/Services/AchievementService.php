@@ -13,21 +13,30 @@ class AchievementService
     ) {
     }
 
-    /** @return array newly unlocked achievement rows */
-    public function checkAndUnlockForCompletedQuests(int $userId, int $completedCount): array
+    /**
+     * Checks every requirement_type this user has progress in against their
+     * current stats, unlocking anything newly earned.
+     *
+     * @param array<string,int> $progress e.g. ['completed_quests' => 5, 'quests_posted' => 2, 'level_reached' => 3]
+     * @return array newly unlocked achievement rows
+     */
+    public function checkAndUnlock(int $userId, array $progress): array
     {
-        $candidates = $this->achievements->findByRequirementType('completed_quests', $completedCount);
         $newlyUnlocked = [];
 
-        foreach ($candidates as $achievement) {
-            if ($this->achievements->hasUnlocked($userId, (int) $achievement['id'])) {
-                continue;
+        foreach ($progress as $requirementType => $achievedValue) {
+            $candidates = $this->achievements->findByRequirementType($requirementType, $achievedValue);
+
+            foreach ($candidates as $achievement) {
+                if ($this->achievements->hasUnlocked($userId, (int) $achievement['id'])) {
+                    continue;
+                }
+
+                $this->achievements->unlock($userId, (int) $achievement['id']);
+                $newlyUnlocked[] = $achievement;
+
+                $this->applyBonus($userId, (int) $achievement['xp_bonus'], (int) $achievement['coins_bonus']);
             }
-
-            $this->achievements->unlock($userId, (int) $achievement['id']);
-            $newlyUnlocked[] = $achievement;
-
-            $this->applyBonus($userId, (int) $achievement['xp_bonus'], (int) $achievement['coins_bonus']);
         }
 
         return $newlyUnlocked;

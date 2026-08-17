@@ -62,7 +62,16 @@ class _QuestBoardScreenState extends ConsumerState<QuestBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return QuestScaffold(
-      appBar: AppBar(title: const Text('Quest board')),
+      appBar: AppBar(
+        title: const Text('Quest board'),
+        actions: [
+          IconButton(
+            tooltip: 'Leaderboard',
+            onPressed: () => context.push('/leaderboard'),
+            icon: const Icon(Icons.leaderboard_outlined),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await context.push('/quests/new');

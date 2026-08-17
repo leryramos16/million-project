@@ -1,10 +1,12 @@
 <?php
 
 use Leryr\Mymillionpesoproject\Repositories\AchievementRepository;
+use Leryr\Mymillionpesoproject\Repositories\CashoutRequestRepository;
 use Leryr\Mymillionpesoproject\Repositories\PaymentMethodRepository;
 use Leryr\Mymillionpesoproject\Repositories\QuestRepository;
 use Leryr\Mymillionpesoproject\Repositories\UserRepository;
 use Leryr\Mymillionpesoproject\Services\AchievementService;
+use Leryr\Mymillionpesoproject\Services\CashoutService;
 use Leryr\Mymillionpesoproject\Services\PaymentMethodService;
 use Leryr\Mymillionpesoproject\Services\QuestService;
 
@@ -15,16 +17,19 @@ use Controller;
     private QuestService $questService;
     private UserRepository $userRepository;
     private PaymentMethodService $paymentMethodService;
+    private CashoutService $cashoutService;
 
     public function __construct()
     {
         $db = (new Database())->connect();
         $userRepository = new UserRepository($db);
+        $questRepository = new QuestRepository($db);
         $achievementService = new AchievementService(new AchievementRepository($db), $userRepository);
 
-        $this->questService = new QuestService(new QuestRepository($db), $userRepository, $achievementService);
+        $this->questService = new QuestService($questRepository, $userRepository, $achievementService);
         $this->userRepository = $userRepository;
         $this->paymentMethodService = new PaymentMethodService(new PaymentMethodRepository($db));
+        $this->cashoutService = new CashoutService($db, new CashoutRequestRepository($db), $userRepository, $questRepository);
     }
 
     public function index()
@@ -37,8 +42,53 @@ use Controller;
         Auth::requireAdmin();
 
         $data['stats'] = $this->questService->adminStats();
+        $data['ledger'] = $this->cashoutService->ledger();
+        $data['pendingCashoutCount'] = count($this->cashoutService->pending());
 
         $this->view('admin/dashboard', $data);
+    }
+
+    public function cashouts()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        Auth::requireLogin();
+        Auth::requireAdmin();
+
+        $data['requests'] = $this->cashoutService->pending();
+        $data['ledger'] = $this->cashoutService->ledger();
+
+        $this->view('admin/cashouts', $data);
+    }
+
+    public function payCashout($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        Auth::requireLogin();
+        Auth::requireAdmin();
+
+        $this->cashoutService->markPaid((int) $id);
+        $_SESSION['success'] = 'Marked as paid.';
+        header("Location: " . ROOT . "/admin/cashouts");
+    }
+
+    public function rejectCashout($id)
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        Auth::requireLogin();
+        Auth::requireAdmin();
+
+        $this->cashoutService->reject((int) $id, $_POST['note'] ?? null);
+        $_SESSION['success'] = 'Rejected — coins refunded to the player.';
+        header("Location: " . ROOT . "/admin/cashouts");
     }
 
     public function viewPendingRequests()
