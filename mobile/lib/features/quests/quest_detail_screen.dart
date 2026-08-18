@@ -10,6 +10,7 @@ import '../../data/models/quest.dart';
 import '../../widgets/coin_chip.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/quest_badges.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class QuestDetailScreen extends ConsumerStatefulWidget {
@@ -58,14 +59,22 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
     try {
       await ref.read(questRepositoryProvider).accept(widget.questId);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Quest accepted!')),
-        );
         await _load();
+        if (mounted) {
+          await showQuestSuccessDialog(
+            context,
+            title: 'Contract Sealed!',
+            message: 'You\'ve accepted this quest. Complete it, then wait for the requester to confirm.',
+          );
+        }
       }
     } on ApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        await showQuestFailureDialog(
+          context,
+          title: 'Could Not Accept',
+          message: e.message,
+        );
       }
     } finally {
       if (mounted) setState(() => _accepting = false);
@@ -77,7 +86,7 @@ class _QuestDetailScreenState extends ConsumerState<QuestDetailScreen> {
     return QuestScaffold(
       appBar: AppBar(title: const Text('Quest details')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : _error != null
               ? Center(child: Text(_error!, style: AppTheme.body(14, color: AppColors.danger)))
               : _quest == null

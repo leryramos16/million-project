@@ -6,6 +6,7 @@ import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/achievement.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class AchievementsScreen extends ConsumerStatefulWidget {
@@ -43,7 +44,7 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> {
     return QuestScaffold(
       appBar: AppBar(title: const Text('Achievements')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : _error != null
               ? Center(child: Text(_error!, style: AppTheme.body(14, color: AppColors.danger)))
               : RefreshIndicator(

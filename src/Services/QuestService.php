@@ -10,7 +10,6 @@ class QuestService
     private const ALLOWED_TYPES = ['main_quests', 'side_quests', 'events'];
     private const ALLOWED_DIFFICULTIES = ['easy', 'medium', 'hard', 'legendary'];
     private const UPLOAD_DIR = __DIR__ . '/../../public/uploads/payments/';
-    private const MIN_AMOUNT_PAID = 5;
 
     public function __construct(
         private QuestRepository $quests,
@@ -55,12 +54,6 @@ class QuestService
             return ['success' => false, 'message' => 'Payment proof is required'];
         }
 
-        $amountPaid = (int) round((float) ($data['amount_paid'] ?? 0));
-
-        if ($amountPaid < self::MIN_AMOUNT_PAID) {
-            return ['success' => false, 'message' => 'Minimum payment is ₱' . self::MIN_AMOUNT_PAID];
-        }
-
         $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
         if (!in_array($file['type'], $allowedTypes, true)) {
@@ -90,7 +83,6 @@ class QuestService
             'title' => $title,
             'description' => $description,
             'payment_proof' => $fileName,
-            'amount_paid' => $amountPaid,
             'xp_reward' => (int) ($data['xp_reward'] ?? 0),
             'coins_reward' => (int) ($data['coins_reward'] ?? 0),
             'type' => $type,
@@ -197,6 +189,7 @@ class QuestService
             'id' => $id,
             'title' => trim($data['title'] ?? ''),
             'description' => trim($data['description'] ?? ''),
+            'amount_paid' => (int) ($data['amount_paid'] ?? 0),
             'xp_reward' => (int) ($data['xp_reward'] ?? 0),
             'coins_reward' => (int) ($data['coins_reward'] ?? 0),
             'type' => $type,

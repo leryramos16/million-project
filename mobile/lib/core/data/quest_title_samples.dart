@@ -1,0 +1,26 @@
+/// Playful example quest titles — real-life errands dressed up as game
+/// contracts. No literal monsters; the "monster" is always the mundane task.
+const List<String> questTitleSamples = [
+  'The Great Grocery Run',
+  'Contract: Slay the Laundry Pile',
+  'Operation: Missing Sock Retrieval',
+  'The Furniture Assembly Trial',
+  'Escort Mission: Lola to the Market',
+  'The Wi-Fi Router Exorcism',
+  'Curse of the Leaky Faucet',
+  'The Never-Ending Dish Pile',
+  'Quest for the Perfect Parking Spot',
+  'The Great Sari-Sari Store Expedition',
+  'Rescue the Cat from the Roof (Again)',
+  'The Printer That Must Not Be Named',
+  'Trial of a Thousand Errands',
+  'The Lost Package Investigation',
+  'Assemble the IKEA of Doom',
+  'The Midnight Ice Cream Run',
+  'Guard Duty: Watch My Store for an Hour',
+  'The Great Moving Day Migration',
+  'Tutor Me or Face My Failing Grades',
+  'The Broken Aircon Chronicles',
+  'Line-Standing Champion Needed (Bills Payment)',
+  'The Great Wi-Fi Password Recovery Quest',
+];

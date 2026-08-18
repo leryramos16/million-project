@@ -7,6 +7,8 @@ import '../data/repositories/payment_method_repository.dart';
 import '../data/repositories/quest_repository.dart';
 import '../data/repositories/user_repository.dart';
 import 'network/api_client.dart';
+import 'services/music_service.dart';
+import 'services/sound_effect_service.dart';
 import 'storage/token_storage.dart';
 
 final tokenStorageProvider = Provider((ref) => TokenStorage());
@@ -24,6 +26,40 @@ final questRepositoryProvider = Provider((ref) => QuestRepository(ref.watch(apiC
 final paymentMethodRepositoryProvider = Provider((ref) => PaymentMethodRepository(ref.watch(apiClientProvider)));
 
 final cashoutRepositoryProvider = Provider((ref) => CashoutRepository(ref.watch(apiClientProvider)));
+
+final musicServiceProvider = Provider((ref) => MusicService());
+
+final soundEffectServiceProvider = Provider((ref) => SoundEffectService());
+
+/// Muted state gates both the looping music and one-shot UI sound effects,
+/// so there's a single mute toggle for the player to reason about.
+class MusicController extends StateNotifier<bool> {
+  MusicController(this._service, this._sfx) : super(false) {
+    _init();
+  }
+
+  final MusicService _service;
+  final SoundEffectService _sfx;
+
+  Future<void> _init() async {
+    state = await _service.loadMuted();
+  }
+
+  Future<void> playTheme() => _service.playTheme(muted: state);
+
+  Future<void> stop() => _service.stop();
+
+  Future<void> playPageTurn() => _sfx.playPageTurn(muted: state);
+
+  Future<void> toggleMute() async {
+    state = !state;
+    await _service.setMuted(state);
+  }
+}
+
+final musicControllerProvider = StateNotifierProvider<MusicController, bool>(
+  (ref) => MusicController(ref.watch(musicServiceProvider), ref.watch(soundEffectServiceProvider)),
+);
 
 enum AuthStatus { unknown, authenticated, unauthenticated }
 

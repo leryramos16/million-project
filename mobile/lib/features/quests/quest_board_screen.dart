@@ -10,6 +10,7 @@ import '../../data/models/quest.dart';
 import '../../data/models/user.dart';
 import '../../widgets/player_header.dart';
 import '../../widgets/quest_card.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class QuestBoardScreen extends ConsumerStatefulWidget {
@@ -67,13 +68,17 @@ class _QuestBoardScreenState extends ConsumerState<QuestBoardScreen> {
         actions: [
           IconButton(
             tooltip: 'Leaderboard',
-            onPressed: () => context.push('/leaderboard'),
+            onPressed: () {
+              ref.read(musicControllerProvider.notifier).playPageTurn();
+              context.push('/leaderboard');
+            },
             icon: const Icon(Icons.leaderboard_outlined),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          ref.read(musicControllerProvider.notifier).playPageTurn();
           await context.push('/quests/new');
           _load();
         },
@@ -82,7 +87,7 @@ class _QuestBoardScreenState extends ConsumerState<QuestBoardScreen> {
       body: RefreshIndicator(
         onRefresh: _load,
         child: _loading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(child: QuestLoader())
             : ListView(
                 padding: const EdgeInsets.only(bottom: 90),
                 children: [
@@ -105,6 +110,7 @@ class _QuestBoardScreenState extends ConsumerState<QuestBoardScreen> {
                             label: Text(entry.value),
                             selected: selected,
                             onSelected: (_) {
+                              ref.read(musicControllerProvider.notifier).playPageTurn();
                               setState(() => _typeFilter = entry.key);
                               _load();
                             },
@@ -142,6 +148,7 @@ class _QuestBoardScreenState extends ConsumerState<QuestBoardScreen> {
                                 child: QuestCard(
                                   quest: q,
                                   onTap: () async {
+                                    ref.read(musicControllerProvider.notifier).playPageTurn();
                                     await context.push('/quests/${q.id}');
                                     _load();
                                   },

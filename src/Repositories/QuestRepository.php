@@ -99,7 +99,7 @@ class QuestRepository
     {
         $stmt = $this->db->prepare(
             'UPDATE quests
-             SET title = :title, description = :description, xp_reward = :xp_reward,
+             SET title = :title, description = :description, amount_paid = :amount_paid, xp_reward = :xp_reward,
                  coins_reward = :coins_reward, type = :type, difficulty = :difficulty
              WHERE id = :id'
         );
@@ -107,6 +107,7 @@ class QuestRepository
         return $stmt->execute([
             'title' => $data['title'],
             'description' => $data['description'],
+            'amount_paid' => $data['amount_paid'] ?? null,
             'xp_reward' => $data['xp_reward'],
             'coins_reward' => $data['coins_reward'],
             'type' => $data['type'],

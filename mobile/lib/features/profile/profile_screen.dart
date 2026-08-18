@@ -11,6 +11,7 @@ import '../../data/models/quest.dart';
 import '../../data/models/user.dart';
 import '../../widgets/player_header.dart';
 import '../../widgets/quest_badges.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -72,13 +73,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final muted = ref.watch(musicControllerProvider);
+
     return QuestScaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        actions: [IconButton(onPressed: _logout, icon: const Icon(Icons.logout))],
+        actions: [
+          IconButton(
+            tooltip: muted ? 'Unmute music' : 'Mute music',
+            onPressed: () => ref.read(musicControllerProvider.notifier).toggleMute(),
+            icon: Icon(muted ? Icons.music_off_outlined : Icons.music_note_outlined),
+          ),
+          IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
+        ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : RefreshIndicator(
               onRefresh: _load,
               child: ListView(
@@ -95,7 +105,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     child: SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: () => context.push('/cashout'),
+                        onPressed: () {
+                          ref.read(musicControllerProvider.notifier).playPageTurn();
+                          context.push('/cashout');
+                        },
                         icon: const Icon(Icons.account_balance_wallet_outlined, size: 18),
                         label: const Text('Cash Out Coins'),
                       ),

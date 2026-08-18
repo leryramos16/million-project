@@ -27,7 +27,9 @@
                     <span class="gm-badge difficulty-easy">Paid ₱<?= (int) ($quest['amount_paid'] ?? 0) ?></span>
                 </div>
 
-                <?php if (!empty($quest['amount_paid']) && (int) $quest['coins_reward'] > (int) $quest['amount_paid']): ?>
+                <?php if (empty($quest['amount_paid'])): ?>
+                    <p style="color:#c0392b;"><strong>⚠ No verified amount yet — check the screenshot and set it in Edit before publishing.</strong></p>
+                <?php elseif ((int) $quest['coins_reward'] > (int) $quest['amount_paid']): ?>
                     <p style="color:#c0392b;"><strong>⚠ Reward exceeds what was paid — you'd lose money publishing this as-is.</strong></p>
                 <?php endif; ?>
 

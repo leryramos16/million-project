@@ -7,6 +7,8 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/cashout_request.dart';
 import '../../data/models/user.dart';
+import '../../widgets/confirm_dialog.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class CashoutScreen extends ConsumerStatefulWidget {
@@ -91,14 +93,18 @@ class _CashoutScreenState extends ConsumerState<CashoutScreen> {
           );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cashout requested! Paid out on the next payout run.')),
-        );
         _coinsController.clear();
         await _load();
+        if (mounted) {
+          await showQuestSuccessDialog(
+            context,
+            title: 'Cashout Requested!',
+            message: 'Paid out on the next payout run.',
+          );
+        }
       }
     } on ApiException catch (e) {
-      setState(() => _error = e.message);
+      if (mounted) await showQuestFailureDialog(context, title: 'Cashout Failed', message: e.message);
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -120,7 +126,7 @@ class _CashoutScreenState extends ConsumerState<CashoutScreen> {
     return QuestScaffold(
       appBar: AppBar(title: const Text('Cash Out')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : RefreshIndicator(
               onRefresh: _load,
               child: ListView(

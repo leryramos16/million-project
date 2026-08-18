@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/player_title.dart';
 import '../../data/models/leaderboard_entry.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 import '../../widgets/user_avatar.dart';
 
@@ -47,7 +48,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     return QuestScaffold(
       appBar: AppBar(title: const Text('Leaderboard')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : _error != null
               ? Center(child: Text(_error!, style: AppTheme.body(14, color: AppColors.danger)))
               : RefreshIndicator(

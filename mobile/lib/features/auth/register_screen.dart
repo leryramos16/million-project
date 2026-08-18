@@ -121,7 +121,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 12),
                 TextButton(
-                  onPressed: () => context.go('/login'),
+                  onPressed: () {
+                    ref.read(musicControllerProvider.notifier).playPageTurn();
+                    context.go('/login');
+                  },
                   child: const Text('Already have an account? Log in'),
                 ),
               ],

@@ -23,6 +23,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String? _error;
 
   @override
+  void initState() {
+    super.initState();
+    // Covers logging out from inside the app, which returns straight here
+    // rather than through the splash screen. playTheme() is a no-op if the
+    // track is already looping.
+    Future.microtask(() => ref.read(musicControllerProvider.notifier).playTheme());
+  }
+
+  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
@@ -50,66 +59,87 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final muted = ref.watch(musicControllerProvider);
+
     return QuestScaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(28),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset('assets/images/logo.png', width: 72, height: 72, fit: BoxFit.cover),
-                ),
-                const SizedBox(height: 20),
-                Text('Welcome back', style: AppTheme.heading(26), textAlign: TextAlign.center),
-                const SizedBox(height: 6),
-                Text(
-                  'Sign in to see what quests are waiting.',
-                  style: AppTheme.body(14, color: AppColors.textSecondary),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 28),
-                if (_error != null) ...[
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.dangerSoft,
-                      borderRadius: BorderRadius.circular(12),
+      body: Stack(
+        children: [
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(28),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset('assets/images/logo.png', width: 72, height: 72, fit: BoxFit.cover),
                     ),
-                    child: Text(_error!, style: AppTheme.body(13, color: AppColors.danger), textAlign: TextAlign.center),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-                QuestTextField(label: 'Username or email', controller: _usernameController),
-                const SizedBox(height: 14),
-                QuestTextField(label: 'Password', controller: _passwordController, obscureText: true),
-                const SizedBox(height: 22),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _loading ? null : _submit,
-                    child: _loading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary),
-                          )
-                        : const Text('Log in'),
-                  ),
+                    const SizedBox(height: 20),
+                    Text('Welcome back', style: AppTheme.heading(26), textAlign: TextAlign.center),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Sign in to see what quests are waiting.',
+                      style: AppTheme.body(14, color: AppColors.textSecondary),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 28),
+                    if (_error != null) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.dangerSoft,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(_error!, style: AppTheme.body(13, color: AppColors.danger), textAlign: TextAlign.center),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    QuestTextField(label: 'Username or email', controller: _usernameController),
+                    const SizedBox(height: 14),
+                    QuestTextField(label: 'Password', controller: _passwordController, obscureText: true),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _loading ? null : _submit,
+                        child: _loading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary),
+                              )
+                            : const Text('Log in'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(musicControllerProvider.notifier).playPageTurn();
+                        context.go('/register');
+                      },
+                      child: const Text('Create an account'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () => context.go('/register'),
-                  child: const Text('Create an account'),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            top: 12,
+            right: 12,
+            child: IconButton(
+              tooltip: muted ? 'Unmute music' : 'Mute music',
+              onPressed: () => ref.read(musicControllerProvider.notifier).toggleMute(),
+              icon: Icon(
+                muted ? Icons.music_off_outlined : Icons.music_note_outlined,
+                color: AppColors.textMuted,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

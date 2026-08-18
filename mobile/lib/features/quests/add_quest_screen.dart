@@ -1,16 +1,19 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../core/data/quest_title_samples.dart';
 import '../../core/network/api_client.dart';
 import '../../core/providers.dart';
 import '../../core/services/location_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/payment_method.dart';
+import '../../widgets/confirm_dialog.dart';
 import '../../widgets/payment_method_card.dart';
 import '../../widgets/quest_scaffold.dart';
 
@@ -24,12 +27,9 @@ class AddQuestScreen extends ConsumerStatefulWidget {
 }
 
 class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
-  static const _minAmount = 5;
-
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
-  final _amountController = TextEditingController();
   final _locationService = LocationService();
 
   XFile? _proofImage;
@@ -42,10 +42,23 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
   List<PaymentMethod> _paymentMethods = [];
   bool _loadingPaymentMethods = true;
 
+  final _random = Random();
+  late String _titleHint;
+
   @override
   void initState() {
     super.initState();
+    _titleHint = questTitleSamples[_random.nextInt(questTitleSamples.length)];
     _loadPaymentMethods();
+  }
+
+  void _rollTitleSuggestion() {
+    String next;
+    do {
+      next = questTitleSamples[_random.nextInt(questTitleSamples.length)];
+    } while (next == _titleController.text && questTitleSamples.length > 1);
+
+    setState(() => _titleController.text = next);
   }
 
   Future<void> _loadPaymentMethods() async {
@@ -64,7 +77,6 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
-    _amountController.dispose();
     super.dispose();
   }
 
@@ -100,12 +112,6 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
       return;
     }
 
-    final amount = int.tryParse(_amountController.text.trim()) ?? 0;
-    if (amount < _minAmount) {
-      setState(() => _error = 'Minimum payment is ₱$_minAmount.');
-      return;
-    }
-
     if (_proofImage == null) {
       setState(() => _error = 'Please upload a payment screenshot.');
       return;
@@ -121,20 +127,23 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
             title: _titleController.text.trim(),
             description: _descriptionController.text.trim(),
             paymentProofPath: _proofImage!.path,
-            amountPaid: amount,
             location: _locationController.text.trim(),
             lat: _lat,
             lng: _lng,
           );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Quest submitted! Waiting for admin approval.')),
+        await showQuestSuccessDialog(
+          context,
+          title: 'Quest Submitted!',
+          message: 'Your request is on its way to the Game Master for review.',
         );
-        context.pop();
+        if (mounted) context.pop();
       }
     } on ApiException catch (e) {
-      setState(() => _error = e.message);
+      if (mounted) {
+        await showQuestFailureDialog(context, title: 'Submission Failed', message: e.message);
+      }
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
@@ -179,7 +188,8 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(color: AppColors.infoSoft, borderRadius: BorderRadius.circular(10)),
                     child: Text(
-                      'An admin sets the XP, coin reward, and quest type when your request is reviewed.',
+                      'An admin verifies your payment and sets the XP, coin reward, and quest type when '
+                      'your request is reviewed.',
                       style: AppTheme.body(12, color: AppColors.info),
                     ),
                   ),
@@ -189,21 +199,18 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
                     const SizedBox(height: 12),
                   ],
                   TextField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Amount you\'re paying (₱)',
-                      prefixText: '₱ ',
-                      hintText: 'e.g. 10',
-                      helperText: 'Whole pesos only, minimum ₱$_minAmount. This is what you already sent — '
-                          'the reward you\'re offering to helpers comes out of this.',
-                      helperMaxLines: 2,
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  TextField(
                     controller: _titleController,
-                    decoration: const InputDecoration(labelText: 'Title'),
+                    decoration: InputDecoration(
+                      labelText: 'Title',
+                      hintText: _titleHint,
+                      helperText: 'Give it a quest name, not a chore name — makes people want to click it.',
+                      helperMaxLines: 2,
+                      suffixIcon: IconButton(
+                        tooltip: 'Give me a quest name idea',
+                        onPressed: _rollTitleSuggestion,
+                        icon: const Text('🎲', style: TextStyle(fontSize: 18)),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 14),
                   TextField(
@@ -211,9 +218,11 @@ class _AddQuestScreenState extends ConsumerState<AddQuestScreen> {
                     maxLines: 5,
                     decoration: const InputDecoration(
                       labelText: 'Description',
-                      hintText: 'e.g. "Need help carrying furniture up 2 flights of stairs, '
-                          'should take about an hour, I have a hand truck available"',
-                      helperText: 'Be detailed — specific quests attract more helpers than vague ones.',
+                      hintText: 'e.g. "The printer has achieved sentience and refuses to print. '
+                          'Brave soul needed to negotiate peace (or just restart it). '
+                          'ETA 15 mins, minor risk of paper cuts."',
+                      helperText: 'Be detailed and have fun with it — specific, entertaining quests '
+                          'attract more helpers than vague ones.',
                       helperMaxLines: 2,
                       alignLabelWithHint: true,
                     ),

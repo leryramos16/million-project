@@ -8,6 +8,7 @@ import '../../core/theme/app_theme.dart';
 import '../../data/models/quest.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/quest_badges.dart';
+import '../../widgets/quest_loader.dart';
 import '../../widgets/quest_scaffold.dart';
 
 class MyRequestsScreen extends ConsumerStatefulWidget {
@@ -33,7 +34,10 @@ class _MyRequestsScreenState extends ConsumerState<MyRequestsScreen> with Single
     super.initState();
     _tabController = TabController(length: _statuses.length, vsync: this);
     _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) _load();
+      if (!_tabController.indexIsChanging) {
+        ref.read(musicControllerProvider.notifier).playPageTurn();
+        _load();
+      }
     });
     _load();
   }
@@ -74,24 +78,25 @@ class _MyRequestsScreenState extends ConsumerState<MyRequestsScreen> with Single
       if (!mounted) return;
 
       final helperName = quest.acceptedByUsername ?? 'The helper';
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Quest completed! $helperName earned ${quest.xpReward} XP and ${quest.coinsReward} coins.'),
-        ),
+      await showQuestSuccessDialog(
+        context,
+        title: 'Quest Completed!',
+        message: '$helperName earned ${quest.xpReward} XP and ${quest.coinsReward} coins.',
       );
+
       for (final achievement in achievements) {
         if (!mounted) return;
-        await showQuestConfirmDialog(
+        await showQuestSuccessDialog(
           context,
           title: '🎉 $helperName unlocked an achievement!',
           message: achievement.title,
-          confirmLabel: 'Nice!',
+          buttonLabel: 'Nice!',
         );
       }
 
       _load();
     } on ApiException catch (e) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+      if (mounted) await showQuestFailureDialog(context, title: 'Could Not Complete', message: e.message);
     }
   }
 
@@ -111,7 +116,7 @@ class _MyRequestsScreenState extends ConsumerState<MyRequestsScreen> with Single
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: QuestLoader())
           : _error != null
               ? Center(child: Text(_error!, style: AppTheme.body(14, color: AppColors.danger)))
               : current == null || current.quests.isEmpty

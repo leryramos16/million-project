@@ -22,10 +22,8 @@
         </div>
 
         <div class="gm-form-group">
-            <label>Requester paid</label>
-            <div style="padding:10px 12px; background:rgba(0,0,0,0.05); border-radius:6px;">
-                ₱<?= (int) ($quest['amount_paid'] ?? 0) ?> — keep coins reward below this to stay profitable.
-            </div>
+            <label>Requester paid (₱) — verify against the screenshot below</label>
+            <input type="number" name="amount_paid" value="<?= (int) ($quest['amount_paid'] ?? 0) ?>" min="0">
         </div>
 
         <div class="gm-form-group">
@@ -34,9 +32,18 @@
         </div>
 
         <div class="gm-form-group">
-            <label>Coins Reward</label>
-            <input type="number" name="coins_reward" value="<?= (int) $quest['coins_reward'] ?>" min="0" max="<?= (int) ($quest['amount_paid'] ?? 0) ?>">
+            <label>Coins Reward — keep at or below what was paid to stay profitable</label>
+            <input type="number" name="coins_reward" value="<?= (int) $quest['coins_reward'] ?>" min="0">
         </div>
+
+        <?php if (!empty($quest['payment_proof'])): ?>
+            <div class="gm-form-group">
+                <label>Payment proof</label>
+                <a href="<?= ROOT ?>/uploads/payments/<?= htmlspecialchars($quest['payment_proof']) ?>" target="_blank">
+                    <img src="<?= ROOT ?>/uploads/payments/<?= htmlspecialchars($quest['payment_proof']) ?>" alt="Payment proof" style="max-width:220px; border-radius:6px;">
+                </a>
+            </div>
+        <?php endif; ?>
 
         <div class="gm-form-group">
             <label>Type</label>
